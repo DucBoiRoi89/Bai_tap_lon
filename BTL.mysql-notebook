@@ -1,0 +1,259 @@
+{
+    "type": "MySQLNotebook",
+    "version": "1.0",
+    "caption": "DB Notebook",
+    "content": "\\about\nUSE thanh;\nCREATE TABLE USERS (\n    user_id INT AUTO_INCREMENT PRIMARY KEY,\n    username VARCHAR(50) NOT NULL UNIQUE,\n    password VARCHAR(255) NOT NULL,\n    full_name VARCHAR(100),\n    role ENUM('ADMIN', 'SELLER', 'BIDDER') NOT NULL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\nCREATE TABLE ITEMS (\n    item_id INT AUTO_INCREMENT PRIMARY KEY,\n    item_name VARCHAR(255) NOT NULL,\n    description TEXT,\n    category VARCHAR(50),\n    seller_id INT,\n    FOREIGN KEY (seller_id) REFERENCES USERS(user_id)\n);\nCREATE TABLE AUCTIONS (\n    auction_id INT AUTO_INCREMENT PRIMARY KEY,\n    item_id INT,\n    start_time DATETIME NOT NULL,\n    end_time DATETIME NOT NULL,\n    starting_price DECIMAL(15, 2) NOT NULL,\n    current_max_price DECIMAL(15, 2),\n    status ENUM('OPEN', 'RUNNING', 'FINISHED', 'CANCELED') DEFAULT 'OPEN',\n    FOREIGN KEY (item_id) REFERENCES ITEMS(item_id)\n);\nCREATE TABLE BID_TRANSACTIONS (\n    bid_id INT AUTO_INCREMENT PRIMARY KEY,\n    auction_id INT,\n    bidder_id INT,\n    bid_amount DECIMAL(15, 2) NOT NULL,\n    bid_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n    FOREIGN KEY (auction_id) REFERENCES AUCTIONS(auction_id),\n    FOREIGN KEY (bidder_id) REFERENCES USERS(user_id)\n);\n\nString sql = \"INSERT INTO ITEMS (item_name, description, category, seller_id) VALUES (?, ?, ?, ?)\";\nPreparedStatement pstmt = connection.prepareStatement(sql);\npstmt.setString(1, name);\npstmt.setString(2, desc);\npstmt.setString(3, category);\npstmt.setInt(4, sellerId);\npstmt.executeUpdate();\n",
+    "options": {
+        "tabSize": 4,
+        "insertSpaces": true,
+        "indentSize": 4,
+        "defaultEOL": "CRLF",
+        "trimAutoWhitespace": true
+    },
+    "viewState": {
+        "cursorState": [
+            {
+                "inSelectionMode": false,
+                "selectionStart": {
+                    "lineNumber": 5,
+                    "column": 16
+                },
+                "position": {
+                    "lineNumber": 5,
+                    "column": 16
+                }
+            }
+        ],
+        "viewState": {
+            "scrollLeft": 0,
+            "firstPosition": {
+                "lineNumber": 1,
+                "column": 1
+            },
+            "firstPositionDeltaTop": 0
+        },
+        "contributionsState": {
+            "editor.contrib.folding": {},
+            "editor.contrib.wordHighlighter": true
+        }
+    },
+    "contexts": [
+        {
+            "state": {
+                "start": 1,
+                "end": 1,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 2,
+                            "content": "Welcome to the MySQL Shell - DB Notebook.\n\nPress Ctrl+Enter to execute the code block.\n\nExecute \\sql to switch to SQL, \\js to JavaScript and \\ts to TypeScript mode.\nExecute \\help or \\? for help;",
+                            "language": "ansi"
+                        }
+                    ]
+                },
+                "currentHeight": 120,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 6
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 2,
+                "end": 37,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 2,
+                            "index": 0,
+                            "resultId": "1b441309-5593-42dd-ade5-88a99abcd268",
+                            "content": "OK, 0 records retrieved in 0.526ms"
+                        },
+                        {
+                            "type": 0,
+                            "index": 1,
+                            "content": "MySQL Error (1050): Table 'users' already exists",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 10
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 10,
+                            "length": 278
+                        },
+                        "contentStart": 11,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 288,
+                            "length": 226
+                        },
+                        "contentStart": 289,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 514,
+                            "length": 366
+                        },
+                        "contentStart": 515,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 880,
+                            "length": 323
+                        },
+                        "contentStart": 881,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 38,
+                "end": 45,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1064): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'String sql = \"INSERT INTO ITEMS (item_name, description, category, seller_id) VA' at line 1",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 100
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 100,
+                            "length": 60
+                        },
+                        "contentStart": 101,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 160,
+                            "length": 26
+                        },
+                        "contentStart": 161,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 186,
+                            "length": 26
+                        },
+                        "contentStart": 187,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 212,
+                            "length": 30
+                        },
+                        "contentStart": 213,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 242,
+                            "length": 27
+                        },
+                        "contentStart": 243,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 269,
+                            "length": 23
+                        },
+                        "contentStart": 270,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 46,
+                "end": 46,
+                "language": "mysql",
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        }
+    ]
+}
