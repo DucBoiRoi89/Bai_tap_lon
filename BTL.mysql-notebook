@@ -2,7 +2,11 @@
     "type": "MySQLNotebook",
     "version": "1.0",
     "caption": "DB Notebook",
+<<<<<<< HEAD
     "content": "\\about\n\nCREATE DATABASE IF NOT EXISTS thanh \nCHARACTER SET utf8mb4 \nCOLLATE utf8mb4_unicode_ci;\n\n\nUSE thanh;\nCREATE TABLE USERS (\n    user_id INT AUTO_INCREMENT PRIMARY KEY,\n    username VARCHAR(50) NOT NULL UNIQUE,\n    password VARCHAR(255) NOT NULL,\n    full_name VARCHAR(100),\n    role ENUM('ADMIN', 'SELLER', 'BIDDER') NOT NULL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\nCREATE TABLE ITEMS (\n    item_id INT AUTO_INCREMENT PRIMARY KEY,\n    item_name VARCHAR(255) NOT NULL,\n    description TEXT,\n    category VARCHAR(50),\n    seller_id INT,\n    FOREIGN KEY (seller_id) REFERENCES USERS(user_id)\n);\nCREATE TABLE AUCTIONS (\n    auction_id INT AUTO_INCREMENT PRIMARY KEY,\n    item_id INT,\n    start_time DATETIME NOT NULL,\n    end_time DATETIME NOT NULL,\n    starting_price DECIMAL(15, 2) NOT NULL,\n    current_max_price DECIMAL(15, 2),\n    status ENUM('OPEN', 'RUNNING', 'FINISHED', 'CANCELED') DEFAULT 'OPEN',\n    FOREIGN KEY (item_id) REFERENCES ITEMS(item_id)\n);\nCREATE TABLE BID_TRANSACTIONS (\n    bid_id INT AUTO_INCREMENT PRIMARY KEY,\n    auction_id INT,\n    bidder_id INT,\n    bid_amount DECIMAL(15, 2) NOT NULL,\n    bid_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n    FOREIGN KEY (auction_id) REFERENCES AUCTIONS(auction_id),\n    FOREIGN KEY (bidder_id) REFERENCES USERS(user_id)\n);\nINSERT INTO USERS (username, password, full_name, role)\nVALUES ('thanh123', 'thanhttvq123', 'TRAN TUAN THANH', 'ADMIN');\n\nINSERT INTO ITEMS (item_name, description, category, seller_id)\nVALUES ('R900P2025', 'RTX 5060', 'laptopgaming', 1);\n\nINSERT INTO auctions (item_id, start_time, end_time, starting_price, current_max_price)\nVALUES (1, NOW(), '2026-04-01 10:00:00', 500000, 500000);\n\nINSERT INTO BID_TRANSACTIONS (auction_id, bidder_id, bid_amount, bid_time)\nVALUES (1, 1, 600000, NOW());\nDELIMITER //\nCREATE TRIGGER AntiSniping\nAFTER INSERT ON bid_transactions\nFOR EACH ROW \nBEGIN \nDECLARE v_auction_id INT;\nDECLARE current_end_time DATETIME;\nDECLARE v_status ENUM('OPEN', 'RUNNING', 'FINISHED', 'CANCELED');\nSET v_auction_id = NEW.auction_id;\nSELECT status INTO v_status  FROM auctions WHERE auction_id = v_auction_id;\nSELECT end_time INTO current_end_time \n    FROM AUCTIONS \n    WHERE auction_id = v_auction_id; [cite: 150]\nIF TIMESTAMPDIFF(SECOND, NOW() , current_end_time ) < 30 and v_status = 'RUNNING' THEN\nUPDATE AUCTIONS \nSET end_time = DATE_ADD(current_end_time, INTERVAL 1 MINUTE)\n        WHERE auction_id = NEW.auction_id; [cite: 150]\n    END IF;\nEND;\nDELIMITER ;\n",
+=======
+    "content": "\\about\nUSE thanh;\nCREATE TABLE USERS (\n    user_id INT AUTO_INCREMENT PRIMARY KEY,\n    username VARCHAR(50) NOT NULL UNIQUE,\n    password VARCHAR(255) NOT NULL,\n    full_name VARCHAR(100),\n    role ENUM('ADMIN', 'SELLER', 'BIDDER') NOT NULL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\nCREATE TABLE ITEMS (\n    item_id INT AUTO_INCREMENT PRIMARY KEY,\n    item_name VARCHAR(255) NOT NULL,\n    description TEXT,\n    category VARCHAR(50),\n    seller_id INT,\n    FOREIGN KEY (seller_id) REFERENCES USERS(user_id)\n);\nCREATE TABLE AUCTIONS (\n    auction_id INT AUTO_INCREMENT PRIMARY KEY,\n    item_id INT,\n    start_time DATETIME NOT NULL,\n    end_time DATETIME NOT NULL,\n    starting_price DECIMAL(15, 2) NOT NULL,\n    current_max_price DECIMAL(15, 2),\n    status ENUM('OPEN', 'RUNNING', 'FINISHED', 'CANCELED') DEFAULT 'OPEN',\n    FOREIGN KEY (item_id) REFERENCES ITEMS(item_id)\n);\nCREATE TABLE BID_TRANSACTIONS (\n    bid_id INT AUTO_INCREMENT PRIMARY KEY,\n    auction_id INT,\n    bidder_id INT,\n    bid_amount DECIMAL(15, 2) NOT NULL,\n    bid_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n    FOREIGN KEY (auction_id) REFERENCES AUCTIONS(auction_id),\n    FOREIGN KEY (bidder_id) REFERENCES USERS(user_id)\n);\n\nString sql = \"INSERT INTO ITEMS (item_name, description, category, seller_id) VALUES (?, ?, ?, ?)\";\nPreparedStatement pstmt = connection.prepareStatement(sql);\npstmt.setString(1, name);\npstmt.setString(2, desc);\npstmt.setString(3, category);\npstmt.setInt(4, sellerId);\npstmt.executeUpdate();\n",
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
     "options": {
         "tabSize": 4,
         "insertSpaces": true,
@@ -15,18 +19,28 @@
             {
                 "inSelectionMode": false,
                 "selectionStart": {
+<<<<<<< HEAD
                     "lineNumber": 63,
                     "column": 35
                 },
                 "position": {
                     "lineNumber": 63,
                     "column": 35
+=======
+                    "lineNumber": 5,
+                    "column": 16
+                },
+                "position": {
+                    "lineNumber": 5,
+                    "column": 16
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                 }
             }
         ],
         "viewState": {
             "scrollLeft": 0,
             "firstPosition": {
+<<<<<<< HEAD
                 "lineNumber": 44,
                 "column": 1
             },
@@ -35,6 +49,16 @@
         "contributionsState": {
             "editor.contrib.folding": {},
             "editor.contrib.wordHighlighter": false
+=======
+                "lineNumber": 1,
+                "column": 1
+            },
+            "firstPositionDeltaTop": 0
+        },
+        "contributionsState": {
+            "editor.contrib.folding": {},
+            "editor.contrib.wordHighlighter": true
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
         }
     },
     "contexts": [
@@ -53,7 +77,11 @@
                         }
                     ]
                 },
+<<<<<<< HEAD
                 "currentHeight": 28,
+=======
+                "currentHeight": 120,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                 "currentSet": 1,
                 "statements": [
                     {
@@ -72,7 +100,11 @@
         {
             "state": {
                 "start": 2,
+<<<<<<< HEAD
                 "end": 43,
+=======
+                "end": 37,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                 "language": "mysql",
                 "result": {
                     "type": "text",
@@ -80,6 +112,7 @@
                         {
                             "type": 2,
                             "index": 0,
+<<<<<<< HEAD
                             "resultId": "edaeacee-d40f-4b7a-d9f5-d1ad4f47f3e9",
                             "content": "OK, 1 row affected in 1.247ms"
                         },
@@ -92,6 +125,14 @@
                         {
                             "type": 0,
                             "index": 2,
+=======
+                            "resultId": "1b441309-5593-42dd-ade5-88a99abcd268",
+                            "content": "OK, 0 records retrieved in 0.526ms"
+                        },
+                        {
+                            "type": 0,
+                            "index": 1,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                             "content": "MySQL Error (1050): Table 'users' already exists",
                             "language": "ansi"
                         }
@@ -100,6 +141,7 @@
                         "text": ""
                     }
                 },
+<<<<<<< HEAD
                 "currentHeight": 64,
                 "currentSet": 1,
                 "statements": [
@@ -180,6 +222,8 @@
                         "text": ""
                     }
                 },
+=======
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                 "currentHeight": 28,
                 "currentSet": 1,
                 "statements": [
@@ -187,7 +231,11 @@
                         "delimiter": ";",
                         "span": {
                             "start": 0,
+<<<<<<< HEAD
                             "length": 120
+=======
+                            "length": 10
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         },
                         "contentStart": 0,
                         "state": 0
@@ -195,28 +243,58 @@
                     {
                         "delimiter": ";",
                         "span": {
+<<<<<<< HEAD
                             "start": 120,
                             "length": 118
                         },
                         "contentStart": 122,
+=======
+                            "start": 10,
+                            "length": 278
+                        },
+                        "contentStart": 11,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
+<<<<<<< HEAD
                             "start": 238,
                             "length": 147
                         },
                         "contentStart": 240,
+=======
+                            "start": 288,
+                            "length": 226
+                        },
+                        "contentStart": 289,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
+<<<<<<< HEAD
                             "start": 385,
                             "length": 106
                         },
                         "contentStart": 387,
+=======
+                            "start": 514,
+                            "length": 366
+                        },
+                        "contentStart": 515,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 880,
+                            "length": 323
+                        },
+                        "contentStart": 881,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         "state": 0
                     }
                 ]
@@ -225,16 +303,26 @@
         },
         {
             "state": {
+<<<<<<< HEAD
                 "start": 55,
                 "end": 74,
+=======
+                "start": 38,
+                "end": 45,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                 "language": "mysql",
                 "result": {
                     "type": "text",
                     "text": [
                         {
                             "type": 0,
+<<<<<<< HEAD
                             "index": 1,
                             "content": "MySQL Error (1064): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5",
+=======
+                            "index": 0,
+                            "content": "MySQL Error (1064): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'String sql = \"INSERT INTO ITEMS (item_name, description, category, seller_id) VA' at line 1",
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                             "language": "ansi"
                         }
                     ],
@@ -242,6 +330,7 @@
                         "text": ""
                     }
                 },
+<<<<<<< HEAD
                 "currentHeight": 45.328125,
                 "currentSet": 1,
                 "statements": [
@@ -270,56 +359,104 @@
                             "length": 35
                         },
                         "contentStart": 121,
+=======
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 100
+                        },
+                        "contentStart": 1,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
+<<<<<<< HEAD
                             "start": 154,
                             "length": 66
                         },
                         "contentStart": 156,
+=======
+                            "start": 100,
+                            "length": 60
+                        },
+                        "contentStart": 101,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
+<<<<<<< HEAD
                             "start": 220,
                             "length": 35
                         },
                         "contentStart": 221,
+=======
+                            "start": 160,
+                            "length": 26
+                        },
+                        "contentStart": 161,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
+<<<<<<< HEAD
                             "start": 255,
                             "length": 76
                         },
                         "contentStart": 256,
+=======
+                            "start": 186,
+                            "length": 26
+                        },
+                        "contentStart": 187,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
+<<<<<<< HEAD
                             "start": 331,
                             "length": 95
                         },
                         "contentStart": 332,
+=======
+                            "start": 212,
+                            "length": 30
+                        },
+                        "contentStart": 213,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
+<<<<<<< HEAD
                             "start": 426,
                             "length": 220
                         },
                         "contentStart": 427,
+=======
+                            "start": 242,
+                            "length": 27
+                        },
+                        "contentStart": 243,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
+<<<<<<< HEAD
                             "start": 646,
                             "length": 24
                         },
@@ -343,6 +480,13 @@
                         },
                         "contentStart": 676,
                         "state": 4
+=======
+                            "start": 269,
+                            "length": 23
+                        },
+                        "contentStart": 270,
+                        "state": 0
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                     }
                 ]
             },
@@ -350,8 +494,13 @@
         },
         {
             "state": {
+<<<<<<< HEAD
                 "start": 75,
                 "end": 75,
+=======
+                "start": 46,
+                "end": 46,
+>>>>>>> 95354bcf00be456a381a16ecbff0208e23766dea
                 "language": "mysql",
                 "currentSet": 1,
                 "statements": [
