@@ -1,0 +1,96 @@
+/* style_luxury.css - Phong cách Đấu giá Sang trọng */
+
+/* 1. Panel Trái - Nền tối, chứa hình ảnh thương hiệu */
+.left-panel {
+    /* Thay bằng ảnh nền sang trọng của bạn (ví dụ: sảnh đấu giá, vật phẩm cổ) */
+    /* -fx-background-image: url('@background_luxury.jpg'); */
+    /* -fx-background-size: cover; */
+    
+    /* Nền màu tối Deep Gray nếu không có ảnh */
+    -fx-background-color: linear-gradient(to bottom right, #2b2b2b, #1a1a1a);
+    -fx-border-color: transparent #d4af37 transparent transparent; /* Viền Gold bên phải */
+    -fx-border-width: 0 3 0 0;
+}
+
+/* Typography Panel Trái */
+.brand-title {
+    -fx-font-family: "Georgia", serif; /* Phông có chân sang trọng */
+    -fx-font-weight: bold;
+    -fx-text-fill: #d4af37; /* Màu Vàng Gold */
+    -fx-effect: dropshadow(three-pass-box, rgba(212, 175, 55, 0.3), 10, 0, 0, 0);
+}
+
+.brand-subtitle {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 2px;
+}
+
+.brand-description {
+    -fx-font-family: "Georgia", serif;
+    -fx-font-style: italic;
+}
+
+/* 2. Panel Phải - Nền trắng tối giản */
+.right-panel {
+    -fx-background-color: #ffffff;
+}
+
+/* Typography Panel Phải */
+.login-header {
+    -fx-font-family: "Georgia", serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2b2b2b;
+}
+
+.input-label {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-text-transform: uppercase;
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 1px;
+}
+
+/* 3. Ô nhập liệu (Inputs) - Tối giản, thanh lịch */
+.luxury-input {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0; /* Góc vuông hoặc bo cực nhẹ */
+    -fx-border-color: #cccccc; /* Viền xám nhạt */
+    -fx-border-width: 0 0 1 0; /* Chỉ viền dưới (Underline style) */
+    -fx-padding: 10 0 10 0;
+    -fx-text-fill: #2b2b2b;
+    -fx-font-size: 14px;
+}
+
+.luxury-input:focus {
+    -fx-border-color: #d4af37; /* Viền đổi sang Gold khi focus */
+    -fx-border-width: 0 0 2 0;
+}
+
+/* 4. Nút bấm (Button) - Đẳng cấp */
+.luxury-button {
+    -fx-background-color: #2b2b2b; /* Nền đen/xám đen */
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 5;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+    -fx-transition:all 0.3s;
+}
+
+.luxury-button:hover {
+    -fx-background-color: #d4af37; /* Đổi sang nền Gold khi di chuột */
+    -fx-text-fill: #2b2b2b; /* Chữ chuyển sang tối */
+}
+
+/* 5. Links */
+.forgot-link {
+    -fx-font-size: 12px;
+    -fx-text-fill: #d4af37;
+    -fx-underline: false;
+}
+
+.forgot-link:hover {
+    -fx-text-fill: #2b2b2b;
+    -fx-underline: true;
+}
