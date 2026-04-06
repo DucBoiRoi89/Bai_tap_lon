@@ -1,0 +1,112 @@
+/* style_luxury.css - Phong cách Đấu giá Tối giản & Sang trọng */
+
+/* --- TỔNG QUAN --- */
+.root {
+    -fx-font-smoothing-type: lcd;
+}
+
+/* 1. PANEL TRÁI - Onyx Black */
+.left-panel {
+    -fx-background-color: #121212; /* Đen nhám sâu, cực kỳ sang trọng */
+    -fx-border-color: transparent #C8B568 transparent transparent; /* Viền Champagne Gold rất mảnh */
+    -fx-border-width: 0 1 0 0;
+}
+
+/* Typography Panel Trái */
+.brand-title {
+    -fx-font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    -fx-font-size: 38px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #C8B568; /* Champagne Gold - Vàng ánh kim nhạt */
+}
+
+.brand-subtitle {
+    -fx-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11px;
+    -fx-text-fill: #888888;
+    -fx-letter-spacing: 4px; /* Kéo giãn chữ tạo sự thanh thoát (lưu ý: JavaFX hỗ trợ giới hạn, dùng font thay thế nếu cần) */
+}
+
+.brand-description {
+    -fx-font-family: "Palatino Linotype", "Book Antiqua", serif;
+    -fx-font-size: 15px;
+    -fx-font-style: italic;
+    -fx-text-fill: #A0A0A0;
+    -fx-line-spacing: 5px;
+}
+
+/* 2. PANEL PHẢI - Nền trắng tinh khiết */
+.right-panel {
+    -fx-background-color: #FAFAFA; /* Trắng ngà nhẹ nhàng, không bị chói mắt */
+}
+
+/* Typography Panel Phải */
+.login-header {
+    -fx-font-family: "Palatino Linotype", "Book Antiqua", serif;
+    -fx-font-size: 26px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #1A1A1A;
+}
+
+.input-label {
+    -fx-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11px;
+    -fx-text-fill: #666666;
+    -fx-text-transform: uppercase;
+}
+
+.normal-text {
+    -fx-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #666666;
+}
+
+/* 3. Ô NHẬP LIỆU (Inputs) - Đường viền siêu mảnh */
+.luxury-input {
+    -fx-background-color: transparent;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 8 0 8 0;
+    -fx-text-fill: #1A1A1A;
+    -fx-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #CCCCCC;
+}
+
+.luxury-input:focused {
+    -fx-border-color: #C8B568; /* Chuyển sang màu Champagne Gold khi nhập */
+    -fx-border-width: 0 0 1.5 0;
+}
+
+/* 4. NÚT BẤM (Button) - Sleek & Modern */
+.luxury-button {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 0; /* Vuông vức hoàn toàn, đặc trưng của UI hàng hiệu */
+    -fx-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: #1A1A1A;
+    -fx-border-width: 1px;
+}
+
+.luxury-button:hover {
+    -fx-background-color: #C8B568; 
+    -fx-text-fill: #1A1A1A;
+    -fx-border-color: #C8B568;
+}
+
+/* 5. LIÊN KẾT (Links) */
+.forgot-link, .register-link {
+    -fx-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: #888888;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.forgot-link:hover, .register-link:hover {
+    -fx-text-fill: #C8B568;
+    -fx-underline: true;
+}
