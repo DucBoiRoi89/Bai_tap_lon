@@ -1,0 +1,297 @@
+{
+    "type": "MySQLNotebook",
+    "version": "1.0",
+    "caption": "DB Notebook",
+    "content": "\\about\n\nCREATE DATABASE IF NOT EXISTS thanh \nCHARACTER SET utf8mb4 \nCOLLATE utf8mb4_unicode_ci;\n\n\nUSE thanh;\nCREATE TABLE IF NOT EXISTS USERS (\n    user_id INT AUTO_INCREMENT PRIMARY KEY,\n    username VARCHAR(50) NOT NULL UNIQUE,\n    password VARCHAR(255) NOT NULL,\n    full_name VARCHAR(100),\n    role ENUM('ADMIN', 'SELLER', 'BIDDER') NOT NULL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\nCREATE TABLE IF NOT EXISTS ITEMS (\n    item_id INT AUTO_INCREMENT PRIMARY KEY,\n    item_name VARCHAR(255) NOT NULL,\n    description TEXT,\n    category VARCHAR(50),\n    seller_id INT,\n    FOREIGN KEY (seller_id) REFERENCES USERS(user_id)\n);\nCREATE TABLE IF NOT EXISTS AUCTIONS (\n    auction_id INT AUTO_INCREMENT PRIMARY KEY,\n    item_id INT,\n    start_time DATETIME NOT NULL,\n    end_time DATETIME NOT NULL,\n    starting_price DECIMAL(15, 2) NOT NULL,\n    current_max_price DECIMAL(15, 2),\n    status ENUM('OPEN', 'RUNNING', 'FINISHED', 'CANCELED') DEFAULT 'OPEN',\n    FOREIGN KEY (item_id) REFERENCES ITEMS(item_id)\n);\nCREATE TABLE IF NOT EXISTS BID_TRANSACTIONS (\n    bid_id INT AUTO_INCREMENT PRIMARY KEY,\n    auction_id INT,\n    bidder_id INT,\n    bid_amount DECIMAL(15, 2) NOT NULL,\n    bid_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n    FOREIGN KEY (auction_id) REFERENCES AUCTIONS(auction_id),\n    FOREIGN KEY (bidder_id) REFERENCES USERS(user_id)\n);\nINSERT INTO USERS (username, password, full_name, role)\nVALUES ('thanh123', 'thanhttvq123', 'TRAN TUAN THANH', 'ADMIN');\n\nINSERT INTO ITEMS (item_name, description, category, seller_id)\nVALUES ('R900P2025', 'RTX 5060', 'laptopgaming', 1);\n\nINSERT INTO auctions (item_id, start_time, end_time, starting_price, current_max_price)\nVALUES (1, NOW(), '2026-04-01 10:00:00', 500000, 500000);\n\nINSERT INTO BID_TRANSACTIONS (auction_id, bidder_id, bid_amount, bid_time)\nVALUES (1, 1, 600000, NOW());\n\n",
+    "options": {
+        "tabSize": 4,
+        "insertSpaces": true,
+        "indentSize": 4,
+        "defaultEOL": "CRLF",
+        "trimAutoWhitespace": true
+    },
+    "viewState": {
+        "cursorState": [
+            {
+                "inSelectionMode": false,
+                "selectionStart": {
+                    "lineNumber": 55,
+                    "column": 1
+                },
+                "position": {
+                    "lineNumber": 55,
+                    "column": 1
+                }
+            }
+        ],
+        "viewState": {
+            "scrollLeft": 0,
+            "firstPosition": {
+                "lineNumber": 29,
+                "column": 1
+            },
+            "firstPositionDeltaTop": -1
+        },
+        "contributionsState": {
+            "editor.contrib.folding": {},
+            "editor.contrib.wordHighlighter": false
+        }
+    },
+    "contexts": [
+        {
+            "state": {
+                "start": 1,
+                "end": 1,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 2,
+                            "content": "Welcome to the MySQL Shell - DB Notebook.\n\nPress Ctrl+Enter to execute the code block.\n\nExecute \\sql to switch to SQL, \\js to JavaScript and \\ts to TypeScript mode.\nExecute \\help or \\? for help;",
+                            "language": "ansi"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 6
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 2,
+                "end": 43,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 2,
+                            "index": 0,
+                            "resultId": "5a508bc7-59da-4cf6-e291-872e08f759fd",
+                            "content": "OK, 1 row affected in 1.05ms"
+                        },
+                        {
+                            "type": 2,
+                            "index": 1,
+                            "resultId": "e0cd6f58-efd0-4354-d2ef-296ae9308356",
+                            "content": "OK, 0 records retrieved in 0.447ms"
+                        },
+                        {
+                            "type": 2,
+                            "index": 2,
+                            "resultId": "2c59c22a-c383-4257-a8e3-fa1a2c4bcd3d",
+                            "content": "OK, 0 records retrieved in 1.622ms"
+                        },
+                        {
+                            "type": 2,
+                            "index": 3,
+                            "resultId": "dcc91e0a-0dca-4fd3-e2e8-03d433ab2023",
+                            "content": "OK, 0 records retrieved in 1.055ms"
+                        },
+                        {
+                            "type": 2,
+                            "index": 4,
+                            "resultId": "54912bc4-629a-41fc-f0a0-77812bb36625",
+                            "content": "OK, 0 records retrieved in 1.055ms"
+                        },
+                        {
+                            "type": 2,
+                            "index": 5,
+                            "resultId": "1b222f34-5f2c-42aa-bce3-ee14f954b086",
+                            "content": "OK, 0 records retrieved in 1.295ms"
+                        }
+                    ]
+                },
+                "currentHeight": 120,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 88
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 88,
+                            "length": 13
+                        },
+                        "contentStart": 91,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 101,
+                            "length": 292
+                        },
+                        "contentStart": 102,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 393,
+                            "length": 240
+                        },
+                        "contentStart": 394,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 633,
+                            "length": 380
+                        },
+                        "contentStart": 634,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1013,
+                            "length": 337
+                        },
+                        "contentStart": 1014,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 44,
+                "end": 54,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1062): Duplicate entry 'thanh123' for key 'users.username'",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 120
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 120,
+                            "length": 118
+                        },
+                        "contentStart": 122,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 238,
+                            "length": 147
+                        },
+                        "contentStart": 240,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 385,
+                            "length": 106
+                        },
+                        "contentStart": 387,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 55,
+                "end": 55,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 1,
+                            "content": "MySQL Error (1359): Trigger already exists",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 4
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 56,
+                "end": 56,
+                "language": "mysql",
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        }
+    ]
+}
