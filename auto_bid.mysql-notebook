@@ -1,0 +1,297 @@
+{
+    "type": "MySQLNotebook",
+    "version": "1.0",
+    "caption": "DB Notebook",
+    "content": "\\about\nCREATE TABLE IF NOT EXISTS AUTO_BID_CONFIGS(\n     auto_bid_id INT AUTO_INCREMENT PRIMARY KEY,\n      user_id INT,\n      auction_id INT,\n      max_bid_amount DECIMAL(15, 2),\n      bid_increment DECIMAL(15, 2),\n      is_active BOOLEAN DEFAULT TRUE ,\n      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,\n      FOREIGN KEY(user_id) REFERENCES USERS(user_id) ON DELETE CASCADE ,\n      FOREIGN KEY(auction_id ) REFERENCES AUCTIONS(auction_id) ON DELETE CASCADE,\n      UNIQUE(user_id, auction_id)\n );\nDROP PROCEDURE IF EXISTS Proc_AutoBidding;\nDELIMITER //\nCREATE PROCEDURE Proc_AutoBidding ( IN p_auction_id INT , IN p_user_id INT , IN p_max_bid_ammount DECIMAL(15,2) )\nBEGIN\nDECLARE v_auto_bidder_id INT;\nDECLARE v_max_price DECIMAL(15,2);\nDECLARE v_step DECIMAL(15,2);\nDECLARE v_next_bid DECIMAL(15,2);\nSTART TRANSACTION;\nSELECT current_max_price INTO @current_price \nFROM AUCTIONS \nWHERE auction_id = p_auction_id FOR UPDATE;\n\nSELECT user_id , max_bid_amount , bid_increment \nINTO v_auto_bidder_id , v_max_price , v_step\nFROM AUTO_BID_CONFIGS\nWHERE auction_id = p_auction_id\nAND is_ACTIVE = TRUE\nAND user_id <> p_user_id\nAND max_bid_amount >= (@current_price + bid_increment)\nORDER BY created_at ASC \nLIMIT 1;\nIF v_auto_bidder_id  IS NOT NULL THEN \nSET v_next_bid = @current_price + v_step;\nINSERT INTO BID_TRANSACTIONS (auction_id, bidder_id, bid_amount)\nVALUES (p_auction_id, v_auto_bidder_id, v_next_bid); \nUPDATE AUCTIONS SET current_max_price = v_next_bid WHERE auction_id = p_auction_id;\nEND IF;\nCOMMIT;\nEND //\nDELIMITER ;\nDELIMITER ;\nDROP TRIGGER IF EXISTS After_Bid_Auto;\nDELIMITER //\nCREATE TRIGGER After_Bid_Auto\nAFTER INSERT ON BID_TRANSACTIONS\nFOR EACH ROW\nBEGIN\n    CALL Proc_AutoBidding(NEW.auction_id, NEW.bidder_id, NEW.bid_amount);\nEND //\nDELIMITER ;\nCREATE INDEX idx_autobid_lookup \nON AUTO_BID_CONFIGS (auction_id, is_active, max_bid_amount);\nCREATE INDEX idx_bid_auction \nON BID_TRANSACTIONS (auction_id, bid_amount DESC);\nCREATE INDEX idx_bid_user \nON BID_TRANSACTIONS (bidder_id);\n\n",
+    "options": {
+        "tabSize": 4,
+        "indentSize": 4,
+        "insertSpaces": true,
+        "defaultEOL": "LF",
+        "trimAutoWhitespace": true
+    },
+    "viewState": {
+        "cursorState": [
+            {
+                "inSelectionMode": false,
+                "selectionStart": {
+                    "lineNumber": 39,
+                    "column": 11
+                },
+                "position": {
+                    "lineNumber": 39,
+                    "column": 11
+                }
+            }
+        ],
+        "viewState": {
+            "scrollLeft": 0,
+            "firstPosition": {
+                "lineNumber": 18,
+                "column": 1
+            },
+            "firstPositionDeltaTop": -18
+        },
+        "contributionsState": {
+            "editor.contrib.folding": {},
+            "editor.contrib.wordHighlighter": false
+        }
+    },
+    "contexts": [
+        {
+            "state": {
+                "start": 1,
+                "end": 1,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 2,
+                            "content": "Welcome to the MySQL Shell - DB Notebook.\n\nPress Ctrl+Enter to execute the code block.\n\nExecute \\sql to switch to SQL, \\js to JavaScript and \\ts to TypeScript mode.\nExecute \\help or \\? for help;",
+                            "language": "ansi"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 6
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 2,
+                "end": 44,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1046): No database selected",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 494
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 494,
+                            "length": 43
+                        },
+                        "contentStart": 496,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": "//",
+                        "span": {
+                            "start": 537,
+                            "length": 13
+                        },
+                        "contentStart": 538,
+                        "state": 4
+                    },
+                    {
+                        "delimiter": "//",
+                        "span": {
+                            "start": 550,
+                            "length": 964
+                        },
+                        "contentStart": 551,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1514,
+                            "length": 12
+                        },
+                        "contentStart": 1515,
+                        "state": 4
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 45,
+                "end": 54,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 1,
+                            "content": "MySQL Error (1046): No database selected",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 11
+                        },
+                        "contentStart": 0,
+                        "state": 4
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 11,
+                            "length": 39
+                        },
+                        "contentStart": 13,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": "//",
+                        "span": {
+                            "start": 50,
+                            "length": 13
+                        },
+                        "contentStart": 51,
+                        "state": 4
+                    },
+                    {
+                        "delimiter": "//",
+                        "span": {
+                            "start": 63,
+                            "length": 163
+                        },
+                        "contentStart": 64,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 226,
+                            "length": 12
+                        },
+                        "contentStart": 227,
+                        "state": 4
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 55,
+                "end": 61,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1046): No database selected",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 93
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 93,
+                            "length": 81
+                        },
+                        "contentStart": 94,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 174,
+                            "length": 60
+                        },
+                        "contentStart": 175,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 234,
+                            "length": 1
+                        },
+                        "contentStart": 233,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 62,
+                "end": 62,
+                "language": "mysql",
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        }
+    ]
+}
