@@ -1,0 +1,35 @@
+Stored Procedure :Là một nhóm các câu lệnh SQL được lưu trữ sẵn trong cơ sở dữ liệu và có thể được gọi thực thi thông qua tên
+Đặc điểm: Có thể nhận tham số đầu vào (IN), trả về kết quả (OUT), hoặc kết hợp cả hai (INOUT)
+
+
+Transaction:Là một nhóm các câu lệnh SQL được thực hiện như một đơn vị công việc duy nhất, đảm bảo tính toàn vẹn.
+Sử dụng START TRANSACTION để bắt đầu, COMMIT để lưu thay đổi, ROLLBACK để hủy bỏ và quay về trạng thái cũ, và SAVEPOINT để đánh dấu điểm phục hồi.
+
+ON DELETE CASCADE là nếu xoá phần tử này thì xoá nguyên cái dòng chứa phần tử đó
+
+CREATE TABLE IF NOT EXISTS AUTO_BID_CONFIGS(
+     auto_bid_id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT,
+      auction_id INT,
+      max_bid_amount DECIMAL(15, 2),
+      bid_increment DECIMAL(15, 2),
+      is_active BOOLEAN DEFAULT TRUE ,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+      FOREIGN KEY(user_id) REFERENCES USERS(user_id) ON DELETE CASCADE ,
+      FOREIGN KEY(auction_id ) REFERENCES AUCTIONS(auction_id) ON DELETE CASCADE,
+      UNIQUE(user_id, auction_id)
+ );
+--------------------> tạo một bảng auto bid để người dùng ai có như cầu dùng auto bid sử dụng 
+
+
+
+CREATE INDEX idx_autobid_lookup 
+ON AUTO_BID_CONFIGS (auction_id, is_active, max_bid_amount);
+CREATE INDEX idx_bid_auction 
+ON BID_TRANSACTIONS (auction_id, bid_amount DESC);
+CREATE INDEX idx_bid_user 
+ON BID_TRANSACTIONS (bidder_id);
+EXPLAIN SELECT user_id FROM AUTO_BID_CONFIGS 
+WHERE auction_id = 1 AND is_active = TRUE;
+
+-------------------> INDEX này là tạo một bảng lưu một phần thông tin của bảng gốc nó có tác dụng tăng tốc độ truy tìm dữ liệu đỡ cho hệ thống phải mò vào bảng cũ 
