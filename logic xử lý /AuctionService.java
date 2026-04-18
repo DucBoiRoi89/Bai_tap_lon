@@ -1,3 +1,8 @@
+package com.uet.auction.service;
+
+import com.uet.auction.dao.*; // Import các DAO
+import com.uet.auction.model.*; // Import các Model
+import com.uet.auction.core.AuctionServer; // Import Server để broadcast
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
