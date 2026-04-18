@@ -1,3 +1,4 @@
+package com.uet.auction.config;
 public class DatabaseConnection {
     private static volatile DatabaseConnection instance;
     private final String url = "jdbc:mysql://localhost:3306/thanh"; 
