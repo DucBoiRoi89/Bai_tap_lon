@@ -1,4 +1,5 @@
 package com.uet.auction.core;
+import com.uet.auction.model.AuctionEvent;
 import java.io.*;
 import java.net.*;
 
