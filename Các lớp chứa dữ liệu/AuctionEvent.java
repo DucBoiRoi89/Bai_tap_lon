@@ -1,3 +1,4 @@
+package com.uet.auction.model;
 import java.io.Serializable;
 
 public class AuctionEvent implements Serializable {
