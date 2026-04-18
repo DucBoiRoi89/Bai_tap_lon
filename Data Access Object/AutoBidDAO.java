@@ -1,3 +1,7 @@
+package com.uet.auction.dao;
+
+import com.uet.auction.config.DatabaseConnection; // Import kết nối DB
+import com.uet.auction.model.AutoBidConfig; // Import Model để sử dụng
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
