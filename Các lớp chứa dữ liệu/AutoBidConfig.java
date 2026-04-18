@@ -1,3 +1,4 @@
+package com.uet.auction.model;
 import java.sql.Timestamp;
 
 public class AutoBidConfig implements Comparable<AutoBidConfig> {
