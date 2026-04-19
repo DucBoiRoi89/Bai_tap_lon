@@ -85,3 +85,6 @@ CREATE INDEX idx_vehicle_brand ON VEHICLES(brand);
 
 DROP INDEX idx_electronics_brand ON ELECTRONICS;
 CREATE INDEX idx_electronics_brand ON ELECTRONICS(brand);
+-- Cập nhật thông tin sản phẩm cơ bản
+UPDATE ITEMS SET item_name = ?, description = ?, category = ? WHERE item_id = ?;
+DELETE FROM ITEMS WHERE item_id = ?;
