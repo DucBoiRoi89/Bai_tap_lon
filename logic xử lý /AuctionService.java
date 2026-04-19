@@ -12,8 +12,8 @@ import java.sql.Timestamp;
 
 public class AuctionService {
     
-    private static final int TRIGGER_WINDOW_SECONDS = 60; // 60 giây cuối [cite: 90]
-    private static final int EXTENSION_SECONDS = 120; // Gia hạn 2 phút [cite: 90]
+    private static final int TRIGGER_WINDOW_SECONDS = 60; // 60 giây cuối 
+    private static final int EXTENSION_SECONDS = 120; // Gia hạn 2 phút
     
     private AuctionDAO auctionDAO = new AuctionDAO();
 
@@ -25,11 +25,11 @@ public class AuctionService {
         // 1. Xác định người đang dẫn đầu TRƯỚC khi thực hiện lượt bid mới để gửi OUTBID
         int previousBidderId = auctionDAO.getHighestBidderId(auctionId);
 
-        // 2. Thực hiện đặt giá qua SQL Procedure (Xử lý Concurrency an toàn) [cite: 83]
+        // 2. Thực hiện đặt giá qua SQL Procedure (Xử lý Concurrency an toàn) 
         int statusCode = auctionDAO.placeSingleBid(bidAmount, userId, auctionId);
         
         if (statusCode == 1) { // Đặt giá thành công
-            // A. Thông báo giá mới cho toàn bộ những người đang xem (Realtime Update) [cite: 95]
+            // A. Thông báo giá mới cho toàn bộ những người đang xem (Realtime Update) 
             AuctionServer.broadcast(new AuctionEvent(AuctionEvent.Type.NEW_BID, auctionId, bidAmount));
             
             // B. Thông báo OUTBID nâng cao: Gửi đích danh cho người vừa bị vượt giá
@@ -42,23 +42,23 @@ public class AuctionService {
                 AuctionServer.notifySpecificUser(previousBidderId, outbidMsg);
             }
             
-            // C. Kiểm tra và thực hiện Anti-sniping [cite: 90]
+            // C. Kiểm tra và thực hiện Anti-sniping 
             if (checkAndExtend(auctionId)) {
                 AuctionServer.broadcast(new AuctionEvent(AuctionEvent.Type.TIME_EXTENDED, auctionId, "Thời gian đã được gia hạn thêm!"));
             }
             
-            // D. Kích hoạt chuỗi Auto-bid dựa trên PriorityQueue [cite: 76]
+            // D. Kích hoạt chuỗi Auto-bid dựa trên PriorityQueue 
             AutoBidService autoBidService = new AutoBidService();
             autoBidService.triggerAutoBids(auctionId, bidAmount, userId);
             
         } else {
-            // Chức năng 3.1.5: Xử lý lỗi & ngoại lệ [cite: 56, 58]
+            // Chức năng 3.1.5: Xử lý lỗi & ngoại lệ 
             System.err.println("Đặt giá thất bại. Mã lỗi: " + statusCode);
         }
     }
 
     /**
-     * Kiểm tra và gia hạn thời gian nếu có bid mới trong 60s cuối (Anti-sniping Algorithm) [cite: 90]
+     * Kiểm tra và gia hạn thời gian nếu có bid mới trong 60s cuối (Anti-sniping Algorithm) 
      */
     public boolean checkAndExtend(int auctionId) {
         String selectQuery = "SELECT end_time FROM AUCTIONS WHERE auction_id = ?";
@@ -77,7 +77,7 @@ public class AuctionService {
                 
                 long secondsRemaining = (endTimeMillis - currentTimeMillis) / 1000;
                 
-                // Nếu còn dưới 60 giây, thực hiện gia hạn [cite: 90]
+                // Nếu còn dưới 60 giây, thực hiện gia hạn 
                 if (secondsRemaining > 0 && secondsRemaining <= TRIGGER_WINDOW_SECONDS) {
                     try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
                         updateStmt.setInt(1, EXTENSION_SECONDS);
