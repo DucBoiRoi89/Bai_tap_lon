@@ -93,3 +93,74 @@ public class AuctionDAO {
         }
     }
 }
+public boolean updateItem(Item item) {
+    String sqlUpdateBase = "UPDATE ITEMS SET item_name = ?, description = ? WHERE item_id = ?";
+    Connection conn = null;
+    
+    try {
+        conn = DatabaseConnection.getInstance().getConnection();
+        conn.setAutoCommit(false); // Bắt đầu Transaction
+
+        // 1. Cập nhật bảng ITEMS (Thông tin chung)
+        try (PreparedStatement psBase = conn.prepareStatement(sqlUpdateBase)) {
+            psBase.setString(1, item.getName());
+            // Lưu ý: Bạn cần thêm field 'description' vào class Item.java nếu chưa có
+            psBase.setString(2, "Mô tả sản phẩm"); 
+            psBase.setInt(3, Integer.parseInt(item.getId()));
+            psBase.executeUpdate();
+        }
+
+        // 2. Cập nhật bảng con tùy theo loại (Polymorphism)
+        if (item instanceof Electronics) {
+            updateElectronics(conn, (Electronics) item);
+        } else if (item instanceof Art) {
+            updateArt(conn, (Art) item);
+        } else if (item instanceof Vehicle) {
+            updateVehicle(conn, (Vehicle) item);
+        }
+
+        conn.commit(); // Hoàn tất nếu không có lỗi
+        return true;
+    } catch (SQLException e) {
+        if (conn != null) {
+            try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+        e.printStackTrace();
+        return false;
+    } finally {
+        if (conn != null) {
+            try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+}
+
+private void updateElectronics(Connection conn, Electronics e) throws SQLException {
+    String sql = "UPDATE ELECTRONICS SET brand = ?, warranty_months = ? WHERE item_id = ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, e.getBrand());
+        ps.setInt(2, e.getWarrantyMonths());
+        ps.setInt(3, Integer.parseInt(e.getId()));
+        ps.executeUpdate();
+    }
+}
+
+private void updateArt(Connection conn, Art a) throws SQLException {
+    String sql = "UPDATE ART SET author = ?, creation_year = ? WHERE item_id = ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, a.getArtist());
+        ps.setInt(2, a.getYearCreated());
+        ps.setInt(3, Integer.parseInt(a.getId()));
+        ps.executeUpdate();
+    }
+}
+
+private void updateVehicle(Connection conn, Vehicle v) throws SQLException {
+    String sql = "UPDATE VEHICLES SET brand = ?, license_plate = ?, mileage = ? WHERE item_id = ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, v.getBrand());
+        ps.setString(2, v.getLicensePlate());
+        ps.setLong(3, v.getMileage());
+        ps.setInt(4, Integer.parseInt(v.getId()));
+        ps.executeUpdate();
+    }
+}
