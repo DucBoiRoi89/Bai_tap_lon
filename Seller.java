@@ -1,18 +1,19 @@
-import java.util.List;
-import java.util.Arrays;
-
+/**
+ * Lớp Người bán.
+ */
 import java.util.ArrayList;
-
+import java.util.List;
 class Seller extends User {
-    private List<Items> myItems;
+    private List<Item> myItems = new ArrayList<>();
 
-    public Seller(String id, String name, String password, String email, int phoneNumber) {
-        super(id, name, password, email, phoneNumber);
-        this.myItems = new ArrayList<>();
+    public Seller(String id, String name, String email) {
+        super(id, name, email);
     }
 
-    @Override
-    public void displayRolePermissions() {
-        System.out.println("Seller permissions");
+    public void addItem(Item item) {
+        myItems.add(item);
+        System.out.println("Đã đăng sản phẩm: " + item.getName());
     }
+
+    public List<Item> getMyItems() { return myItems; }
 }

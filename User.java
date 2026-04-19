@@ -1,14 +1,25 @@
-public abstract class User extends Entity {
-    private String password;
+/**
+ * Lớp User trừu tượng làm cha cho Bidder, Seller, Admin.
+ * Thể hiện tính Inheritance.
+ */
+abstract class User extends Entity {
     private String email;
-    private int phoneNumber;
+    private String password;
+    private String phoneNumber;
 
-    public User(String id, String name, String password, String email, int phoneNumber) {
+    public User(String id, String name, String email) {
         super(id, name);
-        this.password = password;
         this.email = email;
-        this.phoneNumber = phoneNumber;
     }
 
-    public abstract void displayRolePermissions();
+    public boolean login() {
+        System.out.println(getName() + " đã đăng nhập.");
+        return true;
+    }
+
+    public void logout() {
+        System.out.println(getName() + " đã đăng xuất.");
+    }
+    
+    public String getEmail() { return email; }
 }
