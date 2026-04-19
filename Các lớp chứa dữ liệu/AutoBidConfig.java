@@ -17,8 +17,6 @@ public class AutoBidConfig implements Comparable<AutoBidConfig> {
         this.increment = increment;
         this.createdAt = createdAt;
     }
-
-    // --- Các hàm Getters đảm bảo tính đóng gói (Encapsulation) ---
     public int getConfigId() { 
         return configId; 
     }
@@ -42,7 +40,6 @@ public class AutoBidConfig implements Comparable<AutoBidConfig> {
     public Timestamp getCreatedAt() { 
         return createdAt; 
     }
-
     // --- Ghi đè phương thức so sánh cho PriorityQueue ---
     @Override
     public int compareTo(AutoBidConfig other) {
