@@ -2,7 +2,13 @@ package com.uet.auction.model;
 import java.io.Serializable;
 
 public class AuctionEvent implements Serializable {
-    public enum Type { NEW_BID, TIME_EXTENDED, AUCTION_FINISHED }
+    // Thêm loại OUTBID để thông báo riêng cho người bị vượt giá
+    public enum Type { 
+        NEW_BID,          // Có giá mới (Gửi cho tất cả)
+        OUTBID,           // Bạn đã bị vượt giá (Gửi đích danh)
+        TIME_EXTENDED,    // Gia hạn thời gian (Gửi cho tất cả)
+        AUCTION_FINISHED  // Kết thúc phiên (Gửi cho tất cả)
+    }
     
     private Type type;
     private int auctionId;
