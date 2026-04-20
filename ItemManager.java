@@ -1,14 +1,16 @@
-import java.util.ArrayList;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ItemManager {
     private static ItemManager instance;
-    private List<Item> allItems; // Danh sách toàn bộ sản phẩm trong hệ thống
+    private List<Item> allItems; 
+    private ItemDAO itemDAO;
 
     private ItemManager() {
-        allItems = new ArrayList<>();
-        // Có thể load dữ liệu từ Database lên đây khi khởi tạo
+        this.itemDAO = new ItemDAO();
+        // Load lại danh sách từ DB để đảm bảo đồng bộ
+        this.allItems = itemDAO.getAllItems(); 
     }
 
     public static synchronized ItemManager getInstance() {
@@ -18,26 +20,43 @@ public class ItemManager {
         return instance;
     }
 
-    // Chức năng 3.1.2: Thêm sản phẩm mới (từ Seller gửi lên)
-    public void createNewItem(Item item) {
-        allItems.add(item);
-        // Gọi DAO để lưu vào SQL
-        // ItemDAO.save(item);
+    // Logic đặt giá an toàn (Thread-safe)
+    public synchronized boolean placeBid(String itemId, BidTransaction bid) {
+        Item item = findById(itemId);
+        
+        // Kiểm tra điều kiện thời gian và tồn tại
+        if (item == null || item.getEndTime().isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+        // Kiểm tra giá đặt phải lớn hơn giá hiện tại
+        if (bid.getAmount() <= item.getCurrentPrice()) {
+            return false;
+        }
+
+        // Thực hiện cập nhật Database trước
+        if (itemDAO.updateCurrentPrice(itemId, bid.getAmount())) {
+            // Cập nhật RAM sau khi DB thành công
+            item.updatePrice(bid.getAmount());
+            
+            // THUẬT TOÁN ANTI-SNIPING (Cộng điểm nâng cao)
+            long secondsLeft = Duration.between(LocalDateTime.now(), item.getEndTime()).getSeconds();
+            if (secondsLeft < 30 && secondsLeft > 0) {
+                item.setEndTime(item.getEndTime().plusMinutes(1));
+            }
+
+            // Gọi thông báo Realtime (Observer Pattern)
+            // Nếu AuctionManager báo lỗi đỏ ở đây, hãy chắc chắn bạn đã tạo class đó
+            AuctionManager.getInstance().notifyBidders(item);
+            return true;
+        }
+        return false;
     }
 
-    // Chức năng tìm kiếm sản phẩm
-    public List<Item> searchByName(String keyword) {
-        return allItems.stream()
-            .filter(i -> i.getName().contains(keyword))
-            .collect(Collectors.toList());
+    public Item findById(String id) {
+        for (Item item : allItems) {
+            if (item.getId().equals(id)) return item;
+        }
+        return null;
     }
-
-    // Lấy các sản phẩm theo loại (Electronics, Art, Vehicle)
-    public <T extends Item> List<T> getItemsByType(Class<T> type) {
-        return allItems.stream()
-            .filter(type::isInstance)
-            .map(type::cast)
-            .collect(Collectors.toList());
-    }
-
 }
