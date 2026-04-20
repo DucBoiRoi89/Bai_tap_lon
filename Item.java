@@ -85,4 +85,5 @@ public abstract class Item extends Entity {
      * Sẽ được triển khai tại các lớp con (Vehicle, Electronics, Art).
      */
     public abstract void displaySpecificInfo();
+    
 }

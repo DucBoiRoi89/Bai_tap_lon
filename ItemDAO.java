@@ -1,7 +1,7 @@
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
 
 public class ItemDAO {
 
@@ -26,52 +26,45 @@ public class ItemDAO {
 
     // 2. Lưu sản phẩm mới (Sửa lỗi ép kiểu và thiếu trường)
     public boolean saveItem(Item item, String sellerId) {
-        // Câu lệnh SQL bao gồm tất cả các trường đặc thù của các lớp con
-        String sql = "INSERT INTO items (item_id, item_name, description, category, start_price, " +
-                     "current_price, end_time, seller_id, license_plate, mileage, brand, " +
-                     "warranty_months, artist, year_created) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO items (item_id, item_name, description, category, start_price, " +
+                 "current_price, end_time, seller_id, license_plate, mileage, brand, " +
+                 "warranty_months, artist, year_created) " +
+                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, item.getId());
-            pstmt.setString(2, item.getName());
-            pstmt.setString(3, item.getDescription());
-            pstmt.setString(4, item.getCategory());
-            pstmt.setDouble(5, item.getStartPrice());
-            pstmt.setDouble(6, item.getCurrentPrice());
-            pstmt.setTimestamp(7, Timestamp.valueOf(item.getEndTime()));
-            pstmt.setString(8, sellerId);
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        // Các trường chung
+        pstmt.setString(1, item.getId());
+        pstmt.setString(2, item.getName());
+        pstmt.setString(3, item.getDescription());
+        pstmt.setString(4, item.getCategory());
+        pstmt.setDouble(5, item.getStartPrice());
+        pstmt.setDouble(6, item.getCurrentPrice());
+        pstmt.setTimestamp(7, Timestamp.valueOf(item.getEndTime()));
+        pstmt.setString(8, sellerId);
 
-            // Xử lý đa hình: Kiểm tra item thuộc lớp con nào để lưu dữ liệu riêng
-            if (item instanceof Vehicle) {
-                Vehicle v = (Vehicle) item;
-                pstmt.setString(9, v.getLicensePlate());
-                pstmt.setLong(10, v.getMileage());
-                // Các trường khác để null
-                pstmt.setNull(11, Types.VARCHAR); pstmt.setNull(12, Types.INTEGER);
-                pstmt.setNull(13, Types.VARCHAR); pstmt.setNull(14, Types.INTEGER);
-            } else if (item instanceof Electronics) {
-                Electronics e = (Electronics) item;
-                pstmt.setNull(9, Types.VARCHAR); pstmt.setNull(10, Types.BIGINT);
-                pstmt.setString(11, e.getBrand());
-                pstmt.setInt(12, e.getWarrantyMonths());
-                pstmt.setNull(13, Types.VARCHAR); pstmt.setNull(14, Types.INTEGER);
-            } else if (item instanceof Art) {
-                Art a = (Art) item;
-                pstmt.setNull(9, Types.VARCHAR); pstmt.setNull(10, Types.BIGINT);
-                pstmt.setNull(11, Types.VARCHAR); pstmt.setNull(12, Types.INTEGER);
-                pstmt.setString(13, a.getArtist());
-                pstmt.setInt(14, a.getYearCreated());
-            }
+        // Các trường đặc thù (Dùng Polymorphism để ép kiểu)
+        // Mặc định set null hết, sau đó check loại nào thì set giá trị đó
+        for (int i = 9; i <= 14; i++) pstmt.setNull(i, Types.NULL);
 
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+        if (item instanceof Vehicle v) {
+            pstmt.setString(9, v.getLicensePlate());
+            pstmt.setLong(10, v.getMileage());
+        } else if (item instanceof Electronics e) {
+            pstmt.setString(11, e.getBrand()); // Bạn cần thêm getter getBrand() trong Electronics.java
+            pstmt.setInt(12, e.getWarrantyMonths());
+        } else if (item instanceof Art a) {
+            pstmt.setString(13, a.getArtist());
+            pstmt.setInt(14, a.getYearCreated());
         }
+
+        return pstmt.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
     }
+}
 
     // 3. Cập nhật giá hiện tại
     public boolean updateCurrentPrice(String itemId, double newPrice) {
@@ -116,5 +109,37 @@ public class ItemDAO {
             item.updatePrice(currentPrice);
         }
         return item;
+    }
+        // Thêm vào trong ItemDAO.java
+
+    // 1. Tìm sản phẩm theo ID để đảm bảo lấy giá mới nhất từ DB
+    public Item findById(String itemId) {
+        String sql = "SELECT * FROM items WHERE item_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, itemId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToItem(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // 2. Cập nhật thời gian kết thúc (Phục vụ thuật toán Anti-sniping)
+    public boolean updateEndTime(String itemId, LocalDateTime newEndTime) {
+        String sql = "UPDATE items SET end_time = ? WHERE item_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setTimestamp(1, Timestamp.valueOf(newEndTime));
+            pstmt.setString(2, itemId);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
