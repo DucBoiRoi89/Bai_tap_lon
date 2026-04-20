@@ -1,11 +1,12 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AuctionManager {
-    // Singleton instance
     private static AuctionManager instance;
-    // Quản lý các phiên đang diễn ra
-    private Map<String, Auction> activeAuctions = new HashMap<>();
+    
+    // Danh sách các "Observer" - ở đây là các luồng xuất dữ liệu của Client
+    private List<PrintWriter> clientWriters = new ArrayList<>();
 
     private AuctionManager() {}
 
@@ -16,31 +17,30 @@ public class AuctionManager {
         return instance;
     }
 
-    // Xử lý đấu giá đồng thời (Concurrency - Mục 3.2.2)
-    public synchronized void processBid(BidTransaction bid) {
-        Auction auction = activeAuctions.get(bid.getItemId());
+    // --- PHẦN QUAN TRỌNG: ĐĂNG KÝ VÀ HỦY ĐĂNG KÝ OBSERVER ---
+
+    public synchronized void addClientWriter(PrintWriter writer) {
+        clientWriters.add(writer);
+    }
+
+    public synchronized void removeClientWriter(PrintWriter writer) {
+        clientWriters.remove(writer);
+    }
+
+    // --- CHỈNH SỬA HÀM NOTIFYBIDDERS ---
+
+    public synchronized void notifyBidders(Item item) {
+        String message = "UPDATE_PRICE|" + item.getId() + "|" + item.getCurrentPrice() + "|" + item.getEndTime();
         
-        if (auction == null || auction.getItem().getStatus() != AuctionStatus.RUNNING) {
-            System.out.println("Lỗi: Phiên đấu giá không tồn tại hoặc đã đóng.");
-            return;
+        System.out.println("[Server] Đang thông báo cho " + clientWriters.size() + " người dùng...");
+
+        // Duyệt qua danh sách các Socket đang kết nối để gửi tin nhắn
+        for (PrintWriter writer : clientWriters) {
+            try {
+                writer.println(message); // Gửi tin nhắn về Client
+            } catch (Exception e) {
+                // Nếu gửi lỗi (Client mất kết nối), ta sẽ dọn dẹp sau
+            }
         }
-
-        // Kiểm tra giá thầu có hợp lệ không
-        if (bid.getAmount() > auction.getItem().getCurrentPrice()) {
-            auction.addBid(bid);
-            System.out.println("Đặt giá thành công! Giá mới: " + bid.getAmount());
-            notifyBidders(auction.getItem());
-        } else {
-            System.out.println("Lỗi: Giá thầu phải cao hơn giá hiện tại.");
-        }
-    }
-
-    // Observer Pattern: Thông báo Realtime
-    public void notifyBidders(Item item) {
-        System.out.println("[Realtime Update] Sản phẩm " + item.getName() + " đã có giá mới: " + item.getCurrentPrice());
-    }
-
-    public void addAuction(Auction auction) {
-        activeAuctions.put(auction.getItem().getId(), auction);
     }
 }
