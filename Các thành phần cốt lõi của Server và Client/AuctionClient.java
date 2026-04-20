@@ -1,30 +1,26 @@
-package com.uet.auction.core;
-import com.uet.auction.model.AuctionEvent;
-import java.io.*;
-import java.net.*;
+package com.uet.auction;
+import com.uet.auction.core.AuctionSocketClient;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class AuctionClient {
+public class MainApp extends Application {
+    @Override
+    public void start(Stage stage) throws Exception {
+        // 1. Kết nối mạng trước
+        AuctionSocketClient.getInstance().connect("localhost", 1234);
+        
+        // 2. Load View (FXML)
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AuctionView.fxml"));
+        Scene scene = new Scene(loader.load());
+        
+        stage.setTitle("UET Auction System");
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public static void main(String[] args) {
-        try (Socket socket = new Socket("localhost", 1234);
-             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-            
-            System.out.println("Da ket noi Auction Server!");
-            
-            // Giả lập gửi yêu cầu xem phiên đấu giá số 1
-            out.writeObject(1); 
-            out.flush();
-
-            // Chờ nhận dữ liệu realtime từ Server
-            while (true) {
-                Object event = in.readObject();
-                if (event instanceof AuctionEvent) {
-                    AuctionEvent e = (AuctionEvent) event;
-                    System.out.println("Thon bao moi tu sever: " + e.getType());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        launch(args);
     }
 }
