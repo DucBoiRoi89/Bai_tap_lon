@@ -52,7 +52,7 @@ public class AuctionService {
             autoBidService.triggerAutoBids(auctionId, bidAmount, userId);
             
         } else {
-            // Chức năng 3.1.5: Xử lý lỗi & ngoại lệ 
+            // Xử lý lỗi & ngoại lệ 
             System.err.println("Đặt giá thất bại. Mã lỗi: " + statusCode);
         }
     }
