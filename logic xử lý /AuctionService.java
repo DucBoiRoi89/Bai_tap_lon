@@ -58,7 +58,7 @@ public class AuctionService {
     }
 
     /**
-     * Kiểm tra và gia hạn thời gian nếu có bid mới trong 60s cuối (Anti-sniping Algorithm) 
+     * Kiểm tra và gia hạn thời gian nếu có bid mới trong 60s cuối
      */
     public boolean checkAndExtend(int auctionId) {
         String selectQuery = "SELECT end_time FROM AUCTIONS WHERE auction_id = ?";
