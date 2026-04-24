@@ -1,4 +1,4 @@
-public class DatabaseException extends Exception {
+public class DatabaseException extends AuctionBaseException {
     public DatabaseException(String msg) {
         super(msg) ;
     }
