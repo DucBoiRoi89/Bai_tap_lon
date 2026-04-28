@@ -1,5 +1,5 @@
 public class DatabaseException extends AuctionBaseException {
-    public DatabaseException(String msg) {
-        super(msg) ;
+    public DatabaseException(String msg, Throwable cs) { 
+        super(msg , cs) ;
     }
 }

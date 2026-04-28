@@ -2,4 +2,8 @@ public class AuctionBaseException extends Exception {  // Base Exception cho cáº
     public AuctionBaseException(String message) { 
         super(message) ; 
     }
+
+    public AuctionBaseException(String message, Throwable cause) { 
+        super(message, cause) ; 
+    }
 }
