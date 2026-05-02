@@ -2,7 +2,7 @@ import java.sql.Connection;
 import java.sql.SQLException ;
 
 public class AuctionService {
-    private ItemDAO itemDao ;
+    private ItemDAO itemDao = new ItemDAO() ;
     private BidDAO bidDao = BidDAO.getInstance() ;
 
     public synchronized boolean processBid(BidTransaction newBid) throws AuctionBaseException {
