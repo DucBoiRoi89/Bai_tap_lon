@@ -1,24 +1,38 @@
-
 package controller;
+import com.google.gson.Gson;
 import core.AuctionSocketClient;
 import model.AuctionEvent;
+import model.ClientRequest;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 public class AuctionController {
     @FXML private Label lblCurrentPrice;
     @FXML private TextField txtBidAmount;
-
+    private Gson gson = new Gson();
     @FXML
     public void initialize() {
         AuctionSocketClient.getInstance().setOnEventReceived(this::handleServerEvent);
+        watchAuction(1);
     }
+    private void watchAuction(int auctionId) {
+        ClientRequest req = new ClientRequest("WATCH", auctionId, 0, 0.0);
+        AuctionSocketClient.getInstance().sendRequest(gson.toJson(req));
+    }
+
     @FXML
     private void onPlaceBidClick() {
         try {
             double amount = Double.parseDouble(txtBidAmount.getText());
-            AuctionSocketClient.getInstance().sendRequest(amount);
+            int currentAuctionId = 1; 
+            int currentUserId = 2;
+            ClientRequest req = new ClientRequest("BID", currentAuctionId, currentUserId, amount);
+            String jsonRequest = gson.toJson(req);
+            AuctionSocketClient.getInstance().sendRequest(jsonRequest);
+            
+            System.out.println("Đã gửi yêu cầu đặt giá: " + jsonRequest);
+            
         } catch (NumberFormatException e) {
-            showError("Vui lòng nhập số hợp lệ");
+            showError("Vui lòng nhập số tiền hợp lệ!");
         }
     }
     private void handleServerEvent(AuctionEvent event) {
@@ -27,10 +41,10 @@ public class AuctionController {
                 lblCurrentPrice.setText("Giá hiện tại: " + event.getData());
                 break;
             case OUTBID:
-                showWarning("Bạn đã bị vượt giá!");
+                showWarning(event.getData().toString());
                 break;
             case TIME_EXTENDED:
-                showInfo("Phiên đấu giá được gia hạn!");
+                showInfo(event.getData().toString());
                 break;
         }
     }
@@ -56,4 +70,3 @@ public class AuctionController {
         alert.showAndWait();
     }
 }
-

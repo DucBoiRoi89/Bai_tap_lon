@@ -19,7 +19,7 @@ public class AuctionDAO {
             cstmt.registerOutParameter(4, Types.INTEGER);
             
             cstmt.execute();
-            return cstmt.getInt(4); // 1: Thành công, 0: Giá thấp, -1: Đóng, -2: Lỗi
+            return cstmt.getInt(4);
         } catch (SQLException e) {
             System.err.println("Lỗi thực thi PRO_PlaceSingleBid: " + e.getMessage());
             return -2;
