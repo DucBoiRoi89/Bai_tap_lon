@@ -1,12 +1,15 @@
 package dao;
+
 import config.DatabaseConnection;
 import model.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class AuctionDAO {
 
     /**
      * Chức năng 3.1.3: Đặt giá qua Stored Procedure 
-     *
      */
     public int placeSingleBid(double bidAmount, int userId, int auctionId) {
         String sql = "{CALL PRO_PlaceSingleBid(?, ?, ?, ?)}";
@@ -25,6 +28,7 @@ public class AuctionDAO {
             return -2;
         }
     }
+
     public int getHighestBidderId(int auctionId) {
         String sql = "SELECT bidder_id FROM BID_TRANSACTIONS WHERE auction_id = ? " +
                      "ORDER BY bid_amount DESC, bid_time ASC LIMIT 1";
@@ -41,17 +45,15 @@ public class AuctionDAO {
     }
 
     /**
-     * Chức năng 3.1.2: cập nhật item
-     *
+     * Chức năng 3.1.2: Cập nhật item
      */
     public boolean updateItem(Item item) {
         String sqlUpdateBase = "UPDATE ITEMS SET item_name = ?, description = ? WHERE item_id = ?";
         Connection conn = null;
         try {
             conn = DatabaseConnection.getInstance().getConnection();
-            conn.setAutoCommit(false); // Bắt đầu giao dịch
+            conn.setAutoCommit(false); 
 
-            // 1. Cập nhật bảng cha
             try (PreparedStatement psBase = conn.prepareStatement(sqlUpdateBase)) {
                 psBase.setString(1, item.getName());
                 psBase.setString(2, "Mô tả sản phẩm");
@@ -59,7 +61,6 @@ public class AuctionDAO {
                 psBase.executeUpdate();
             }
 
-            // 2. Cập nhật bảng con tương ứng
             if (item instanceof Electronics) {
                 updateElectronics(conn, (Electronics) item);
             } else if (item instanceof Art) {
@@ -81,6 +82,7 @@ public class AuctionDAO {
             }
         }
     }
+
     private void updateElectronics(Connection conn, Electronics e) throws SQLException {
         String sql = "UPDATE ELECTRONICS SET brand = ?, warranty_months = ? WHERE item_id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -90,6 +92,7 @@ public class AuctionDAO {
             ps.executeUpdate();
         }
     }
+
     private void updateArt(Connection conn, Art a) throws SQLException {
         String sql = "UPDATE ART SET author = ?, creation_year = ? WHERE item_id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -99,6 +102,7 @@ public class AuctionDAO {
             ps.executeUpdate();
         }
     }
+
     private void updateVehicle(Connection conn, Vehicle v) throws SQLException {
         String sql = "UPDATE VEHICLES SET brand = ?, license_plate = ?, mileage = ? WHERE item_id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -128,13 +132,15 @@ public class AuctionDAO {
             return false;
         }
     }
-}
-// Lấy danh sách ID các phiên đang RUNNING nhưng đã quá hạn 
+
+    /**
+     * BỔ SUNG: Lấy danh sách ID các phiên đang RUNNING nhưng đã quá hạn 
+     */
     public List<Integer> getExpiredAuctions() {
         List<Integer> expiredAuctions = new ArrayList<>();
         String sql = "SELECT auction_id FROM AUCTIONS WHERE status = 'RUNNING' AND end_time <= NOW()";
         
-        try (Connection conn = config.DatabaseConnection.getInstance().getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             
@@ -147,10 +153,12 @@ public class AuctionDAO {
         return expiredAuctions;
     }
 
-    // Cập nhật trạng thái của phiên đấu giá
+    /**
+     * BỔ SUNG: Cập nhật trạng thái của phiên đấu giá
+     */
     public void updateAuctionStatus(int auctionId, String status) {
         String sql = "UPDATE AUCTIONS SET status = ? WHERE auction_id = ?";
-        try (Connection conn = config.DatabaseConnection.getInstance().getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setString(1, status);
@@ -161,3 +169,4 @@ public class AuctionDAO {
             System.err.println("Lỗi khi cập nhật trạng thái phiên: " + e.getMessage());
         }
     }
+}
