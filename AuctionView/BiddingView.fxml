@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AuctionListController">
+   <top>
+      <VBox alignment="CENTER" prefHeight="125.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #1a1a1a;" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="20.0" top="20.0" />
+         </padding>
+         <children>
+            <Label text="FINE ART &amp; ANTIQUES" textFill="#a0a0a0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label text="UET AUCTIONS" textFill="#dca742">
+               <font>
+                  <Font name="Serif Regular" size="36.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: #f8f9fa;" BorderPane.alignment="CENTER">
+         <content>
+            <FlowPane fx:id="itemContainer" alignment="TOP_CENTER" hgap="25.0" prefHeight="150.0" prefWidth="200.0" vgap="30.0">
+               <padding>
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+               </padding>
+            </FlowPane>
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>
