@@ -1,10 +1,7 @@
 package sever;
+import common.entities.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import common.entities.Product;
-import common.entities.*;
-// import common.entities.Admin;
 
 public class ProductManager {
     private static ProductManager instance;

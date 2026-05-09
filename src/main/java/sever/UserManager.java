@@ -1,5 +1,6 @@
 package sever;
 import common.entities.*;
+import common.exceptions.AuthenticationException;
 import common.factory.UserFactory;
 import database.UserDAO;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,7 +60,8 @@ public class UserManager {
     }
     
     public User login(String email, String password) throws AuthenticationException {
-        User user = UserDAO.getUserByEmail(email);
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.getUserByEmail(email);
         
         // user.getPassword() bây giờ đã hết lỗi nhờ Getter ở file User.java
         if (user != null && user.getPassword().equals(password)) {
@@ -71,8 +73,9 @@ public class UserManager {
     }
 
     public void register(User newUser) {
-        if (UserDAO.getUserByEmail(newUser.getEmail()) == null) {
-            UserDAO.saveUser(newUser);
+        UserDAO userDAO = new UserDAO();
+        if (userDAO.getUserByEmail(newUser.getEmail()) == null) {
+            userDAO.saveUser(newUser);
             System.out.println("Đăng ký thành công tài khoản: " + newUser.getEmail());
         }
     }
