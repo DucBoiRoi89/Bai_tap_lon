@@ -17,7 +17,7 @@ public class ItemDAO {
         List<Item> items = new ArrayList<>();
         String sql = "SELECT * FROM items";
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
@@ -38,7 +38,7 @@ public class ItemDAO {
                      "warranty_months, artist, year_created) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, item.getId());
@@ -74,7 +74,7 @@ public class ItemDAO {
     // 3. Tìm sản phẩm theo ID (Lấy giá realtime từ DB)
     public Item findById(String itemId) {
         String sql = "SELECT * FROM items WHERE item_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, itemId);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -91,7 +91,7 @@ public class ItemDAO {
     // 4. Cập nhật giá hiện tại
     public boolean updateCurrentPrice(String itemId, double newPrice) {
         String sql = "UPDATE items SET current_price = ? WHERE item_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setDouble(1, newPrice);
             pstmt.setString(2, itemId);
@@ -104,7 +104,7 @@ public class ItemDAO {
     // 5. Cập nhật thời gian kết thúc (Cho Anti-sniping)
     public boolean updateEndTime(String itemId, LocalDateTime newEndTime) {
         String sql = "UPDATE items SET end_time = ? WHERE item_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setTimestamp(1, Timestamp.valueOf(newEndTime));
             pstmt.setString(2, itemId);

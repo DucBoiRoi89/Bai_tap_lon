@@ -16,6 +16,4 @@ public abstract class Product {
     public String getName() { return name; }
     // BẮT BUỘC THÊM: Getter
     public String getSellerId() { return sellerId; }
-    
-    // GIỮ NGUYÊN các hàm abstract khác của bạn
 }

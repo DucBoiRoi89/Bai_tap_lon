@@ -1,17 +1,12 @@
 package database;
-import java.sql.*;
-
-// import common.entities.Bidder;
-// import common.entities.Seller;
-// import common.entities.User;
-// import common.entities.Admin;
 import common.entities.*;
+import java.sql.*;
 
 public class UserDAO {
     // Lưu người dùng mới (Đăng ký)
     public boolean saveUser(User user) {
         String sql = "INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getId());
             pstmt.setString(2, user.getName());
@@ -34,7 +29,7 @@ public class UserDAO {
     // Lấy người dùng theo Email (Đăng nhập)
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -66,7 +61,7 @@ public class UserDAO {
     // THÊM: Lấy ID cao nhất để đồng bộ counter khi khởi động server
     public int getMaxUserId() {
         String sql = "SELECT MAX(CAST(id AS UNSIGNED)) FROM users";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {

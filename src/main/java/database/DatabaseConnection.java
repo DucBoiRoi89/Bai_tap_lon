@@ -1,42 +1,54 @@
 package database;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Lớp DatabaseConnection áp dụng Singleton Pattern.
- * Đảm bảo chỉ có một kết nối duy nhất tới cơ sở dữ liệu SQL.
+ * Lớp DatabaseConnection áp dụng Singleton Pattern với Double-Checked Locking.
+ * Đảm bảo an toàn đa luồng và hiệu suất cao.
  */
 public class DatabaseConnection {
-    // 1. Các thông số cấu hình Database (Thay đổi theo máy của bạn)
-    private static final String URL = "jdbc:mysql://localhost:3306/auction_db"; // Tên DB là auction_db
-    private static final String USER = "root";       // Username mặc định của MySQL
-    private static final String PASSWORD = "admin";   // Mật khẩu MySQL của bạn
-
-    // 2. Biến static để lưu trữ instance duy nhất của Connection
+    // 1. Dùng volatile để đảm bảo các luồng luôn thấy giá trị mới nhất của instance
+    private static volatile DatabaseConnection instance;
     private static Connection connection = null;
 
-    // 3. Private constructor để ngăn việc khởi tạo đối tượng từ bên ngoài bằng lệnh 'new'
-    private DatabaseConnection() {}
+    // Các thông số cấu hình - Bạn hãy điều chỉnh cho khớp với máy của mình
+    private final String url = "jdbc:mysql://localhost:3306/thanh"; 
+    private final String user = "root"; 
+    private final String password = ""; // Hoặc "admin" tùy máy bạn
+
+    // 2. Private constructor ngăn việc khởi tạo bằng từ khóa 'new'
+    private DatabaseConnection() throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Lỗi: Không tìm thấy Driver MySQL JDBC!");
+            throw new SQLException("NOT FOUND MYSQL JDBC DRIVER", e);
+        }
+    }
+
+    // 3. Phương thức getInstance theo cơ chế Double-Checked Locking
+    public static DatabaseConnection getInstance() throws SQLException {
+        if (instance == null) {
+            synchronized (DatabaseConnection.class) {
+                if (instance == null) {
+                    instance = new DatabaseConnection();
+                }
+            }
+        }
+        return instance;
+    }
 
     /**
-     * Phương thức public static để lấy kết nối.
-     * Có từ khóa 'synchronized' để đảm bảo an toàn khi chạy đa luồng (Multi-threading).
+     * Lấy kết nối tới Database.
+     * Kiểm tra và khởi tạo lại nếu kết nối đã bị đóng.
      */
-    public static synchronized Connection getConnection() throws SQLException {
-        // Kiểm tra nếu kết nối chưa được tạo hoặc đã bị đóng
+    public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
-                // Đăng ký JDBC Driver cho MySQL (Phiên bản mới)
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                
-                // Khởi tạo kết nối
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                connection = DriverManager.getConnection(url, user, password);
                 System.out.println("--- Kết nối Database thành công! ---");
-                
-            } catch (ClassNotFoundException e) {
-                System.err.println("Lỗi: Không tìm thấy Driver MySQL!");
-                e.printStackTrace();
             } catch (SQLException e) {
                 System.err.println("Lỗi: Không thể kết nối tới SQL. Hãy kiểm tra URL/User/Pass!");
                 throw e;
@@ -46,7 +58,7 @@ public class DatabaseConnection {
     }
 
     /**
-     * Phương thức đóng kết nối khi tắt Server.
+     * Phương thức đóng kết nối an toàn khi tắt Server.
      */
     public static void closeConnection() {
         if (connection != null) {
