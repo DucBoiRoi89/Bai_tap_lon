@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+            prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #f8f9fa;" 
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controller.AuctionListController">
+   <top>
+      <VBox alignment="CENTER" prefHeight="100.0" spacing="5.0" style="-fx-background-color: #1a1a1a;">
+         <children>
+            <Label text="FINE ART &amp; ANTIQUES" textFill="#a0a0a0"><font><Font size="14.0" /></font></Label>
+            <Label text="UET AUCTIONS" textFill="#dca742"><font><Font name="System Bold" size="36.0" /></font></Label>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent;">
+         <content>
+            <HBox spacing="30.0" style="-fx-background-color: #f5f5f5;">
+               <padding><Insets bottom="40.0" left="40.0" right="40.0" top="20.0" /></padding>
+               <children>
+                  <VBox spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 15;" HBox.hgrow="ALWAYS">
+                     <padding><Insets bottom="25.0" left="25.0" right="25.0" top="25.0" /></padding>
+                     <children>
+                        <Button onAction="#handleGoToHome" style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-cursor: hand;" text="← Quay lại trang chủ" />
+                        
+                        <Label fx:id="lblItemName" text="Tên sản phẩm">
+                           <font><Font name="System Bold" size="24.0" /></font>
+                        </Label>
+
+                        <GridPane fx:id="gridElectronics" hgap="10" managed="false" visible="false" vgap="10">
+                           <columnConstraints>
+                              <ColumnConstraints minWidth="120" />
+                              <ColumnConstraints hgrow="ALWAYS" />
+                           </columnConstraints>
+                           <children>
+                              <Label text="Thương hiệu:" style="-fx-font-weight: bold;" />
+                              <Label fx:id="lblBrandE" text="..." GridPane.columnIndex="1" />
+                              <Label text="Bảo hành (tháng):" style="-fx-font-weight: bold;" GridPane.rowIndex="1" />
+                              <Label fx:id="lblWarranty" text="..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+
+                        <GridPane fx:id="gridArt" hgap="10" managed="false" visible="false" vgap="10">
+                           <columnConstraints>
+                              <ColumnConstraints minWidth="120" />
+                              <ColumnConstraints hgrow="ALWAYS" />
+                           </columnConstraints>
+                           <children>
+                              <Label text="Tác giả:" style="-fx-font-weight: bold;" />
+                              <Label fx:id="lblAuthor" text="..." GridPane.columnIndex="1" />
+                              <Label text="Năm sáng tác:" style="-fx-font-weight: bold;" GridPane.rowIndex="1" />
+                              <Label fx:id="lblYear" text="..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+
+                        <GridPane fx:id="gridVehicle" hgap="10" managed="false" visible="false" vgap="10">
+                           <columnConstraints>
+                              <ColumnConstraints minWidth="120" />
+                              <ColumnConstraints hgrow="ALWAYS" />
+                           </columnConstraints>
+                           <children>
+                              <Label text="Hãng xe:" style="-fx-font-weight: bold;" />
+                              <Label fx:id="lblBrandV" text="..." GridPane.columnIndex="1" />
+                              <Label text="Biển số:" style="-fx-font-weight: bold;" GridPane.rowIndex="1" />
+                              <Label fx:id="lblLicense" text="..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="Số km đã đi:" style="-fx-font-weight: bold;" GridPane.rowIndex="2" />
+                              <Label fx:id="lblMileage" text="..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                           </children>
+                        </GridPane>
+
+                        <Label text="Mô tả chi tiết:"><font><Font name="System Bold" size="14.0" /></font></Label>
+                        <TextArea fx:id="txtDescription" editable="false" prefHeight="150.0" wrapText="true" style="-fx-control-inner-background: #fdfdfd;" />
+                     </children>
+                  </VBox>
+                  
+                  <VBox prefWidth="350.0">
+                     <fx:include fx:id="liveAuctionView" source="LiveAuctionView.fxml" />
+                  </VBox>
+               </children>
+            </HBox>
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>
