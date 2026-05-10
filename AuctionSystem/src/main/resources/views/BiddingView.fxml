@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AuctionListController">
+   <top>
+      <VBox alignment="CENTER" prefHeight="125.0" style="-fx-background-color: #1a1a1a;">
+         <padding><Insets bottom="20.0" top="20.0" /></padding>
+         <children>
+            <Label text="FINE ART &amp; ANTIQUES" textFill="#a0a0a0"><font><Font size="14.0" /></font></Label>
+            <Label text="UET AUCTIONS" textFill="#dca742"><font><Font name="Serif Regular" size="36.0" /></font></Label>
+         </children>
+      </VBox>
+   </top>
+   <left>
+      <VBox prefWidth="200.0" spacing="10.0" style="-fx-background-color: #404040;">
+         <padding><Insets bottom="20.0" left="20.0" right="20.0" top="30.0" /></padding>
+         <children>
+            <Button onAction="#handleGoToHome" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: #dca742; -fx-font-weight: bold; -fx-cursor: hand;" text="Trang chủ " />
+            <Button onAction="#handleGoToProfile" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: #e0e0e0; -fx-cursor: hand;" text="Tài khoản " />
+            <Button onAction="#handleGoToHistory" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: #e0e0e0; -fx-cursor: hand;" text="Lịch sử đấu giá " />
+            <Region VBox.vgrow="ALWAYS" />
+            <Button prefWidth="200.0" style="-fx-background-color: #dca742; -fx-text-fill: white;" text="+ THÊM SẢN PHẨM " />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+         <content><FlowPane fx:id="itemContainer" alignment="TOP_CENTER" hgap="25.0" vgap="30.0"><padding><Insets bottom="30.0" left="30.0" right="30.0" top="30.0" /></padding></FlowPane></content>
+      </ScrollPane>
+   </center>
+</BorderPane>
