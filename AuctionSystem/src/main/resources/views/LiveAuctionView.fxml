@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-border-color: #eee; -fx-border-radius: 10; -fx-background-radius: 10;" 
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="controller.AuctionController">
+   <children>
+      <Label text="GIÁ HIỆN TẠI" textFill="#dca742">
+         <font><Font name="System Bold" size="16.0" /></font>
+      </Label>
+      <Label fx:id="lblCurrentPrice" text="0 VNĐ" style="-fx-font-size: 28; -fx-font-weight: bold;" />
+      
+      <VBox spacing="8.0">
+         <children>
+            <Label text="Số tiền bạn muốn đặt:" />
+            <TextField fx:id="txtBidAmount" prefHeight="40.0" promptText="Nhập số tiền..." />
+            <Button onAction="#onPlaceBidClick" prefHeight="40.0" prefWidth=" Infinity" 
+                    style="-fx-background-color: #1a1a1a; -fx-text-fill: #dca742; -fx-font-weight: bold; -fx-cursor: hand;" text="XÁC NHẬN ĐẶT GIÁ" />
+          <Button onAction="#handleOpenAutoBid" prefHeight="40.0" prefWidth="Infinity" 
+        style="-fx-background-color: #333; -fx-text-fill: #deff9a; -fx-font-weight: bold; -fx-cursor: hand;" 
+        text="ROBOT AUTO BID" />
+         </children>
+      </VBox>
+      <Separator />
+      <Label fx:id="lblTimeRemaining" text="Thời gian còn lại: --:--:--" textFill="#e74c3c">
+         <font><Font name="System Italic" size="14.0" /></font>
+      </Label>
+   </children>
+</VBox>
