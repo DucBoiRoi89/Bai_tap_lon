@@ -33,7 +33,7 @@ public class ItemDAO {
                 details.put("brand", rs.getString("e_brand"));
                 details.put("warrantyMonths", rs.getInt("warranty_months"));
             } else if ("ART".equalsIgnoreCase(category)) {
-                details.put("artist", rs.getString("a_author"));
+                details.put("artist", rs.getString("author"));
                 details.put("yearCreated", rs.getInt("creation_year"));
             } else if ("VEHICLE".equalsIgnoreCase(category)) {
                 details.put("brand", rs.getString("v_brand"));
