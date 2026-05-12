@@ -5,16 +5,6 @@ import java.util.Map;
 
 public class ItemFactory {
 
-    /**.
-     * @param type 
-     * @param id Mã sản phẩm
-     * @param name Tên sản phẩm
-     * @param description Mô tả
-     * @param startingPrice Giá khởi điểm (MỚI)
-     * @param endTime Thời gian kết thúc (MỚI)
-     * @param details Các thông số kỹ thuật riêng của từng loại
-     * @return 
-     */
     public static Item createItem(String type, String id, String name, String description, 
                                   double startingPrice, LocalDateTime endTime, Map<String, Object> details) {
         
