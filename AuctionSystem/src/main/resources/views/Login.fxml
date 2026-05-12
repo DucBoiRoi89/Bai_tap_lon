@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<StackPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #1a1a1a;" 
+           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+           fx:controller="controller.LoginController">
+   <children>
+      <VBox alignment="CENTER" maxWidth="400.0" spacing="25.0" 
+            style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 40; -fx-effect: dropshadow(three-pass-box, rgba(220,167,66,0.3), 20, 0, 0, 0);">
+         <children>
+            <VBox alignment="CENTER" spacing="5.0">
+               <children>
+                  <Label text="UET AUCTIONS" textFill="#dca742">
+                     <font><Font name="System Bold" size="32.0" /></font>
+                  </Label>
+                  <Label text="Hệ thống đấu giá trực tuyến" textFill="#666666" />
+               </children>
+            </VBox>
+
+            <VBox spacing="15.0">
+               <children>
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label text="Tên đăng nhập" style="-fx-font-weight: bold;" />
+                        <TextField fx:id="txtUsername" prefHeight="45.0" promptText="Nhập username..." 
+                                   style="-fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label text="Mật khẩu" style="-fx-font-weight: bold;" />
+                        <PasswordField fx:id="txtPassword" prefHeight="45.0" promptText="Nhập mật khẩu..." 
+                                       style="-fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+
+            <Button fx:id="btnLogin" onAction="#handleLogin" prefHeight="50.0" prefWidth="Infinity" 
+                    style="-fx-background-color: #1a1a1a; -fx-text-fill: #dca742; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;" text="ĐĂNG NHẬP" />
+            
+            <HBox alignment="CENTER" spacing="5.0">
+   <children>
+      <Label text="Chưa có tài khoản?" />
+      <Hyperlink onAction="#goToRegister" text="Đăng ký ngay" textFill="#dca742" style="-fx-font-weight: bold;" />
+   </children>
+</HBox>
+         </children>
+      </VBox>
+   </children>
+</StackPane>
