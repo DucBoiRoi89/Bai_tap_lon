@@ -1,0 +1,43 @@
+name: Java CI/CD Multi-OS (JDK 17)
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        # Chạy trên cả 3 hệ điều hành để đảm bảo tính tương thích của JavaFX
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17' # Đã chuyển từ 25 xuống 17
+        distribution: 'temurin' # Bản phân phối phổ biến và ổn định nhất cho JDK 17
+        cache: maven
+
+    # Chỉ chạy Checkstyle trên máy Ubuntu để tiết kiệm thời gian
+    - name: Run Checkstyle
+      if: matrix.os == 'ubuntu-latest'
+      run: mvn checkstyle:check
+
+    # Biên dịch và chạy Unit Test trên từng hệ điều hành
+    - name: Build and Test with Maven
+      run: mvn clean test
+
+    # Báo cáo kết quả test lên giao diện GitHub (Chỉ chạy trên Ubuntu)
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v4
+      if: (success() || failure()) && matrix.os == 'ubuntu-latest'
+      with:
+        report_paths: '**/target/surefire-reports/TEST-*.xml'
