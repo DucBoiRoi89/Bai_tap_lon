@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<StackPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #1a1a1a;" 
+           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+           fx:controller="controller.RegisterController">
+   <children>
+      <VBox alignment="CENTER" maxWidth="450.0" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 35;">
+         <children>
+            <Label text="ĐĂNG KÝ TÀI KHOẢN" textFill="#dca742" style="-fx-font-weight: bold; -fx-font-size: 24;" />
+            
+            <VBox spacing="10.0">
+               <children>
+                  <TextField fx:id="txtFullName" prefHeight="40.0" promptText="Họ và tên thật..." style="-fx-background-radius: 8;" />
+                  <TextField fx:id="txtUsername" prefHeight="40.0" promptText="Tên đăng nhập..." style="-fx-background-radius: 8;" />
+                  <PasswordField fx:id="txtPassword" prefHeight="40.0" promptText="Mật khẩu..." style="-fx-background-radius: 8;" />
+                  <ComboBox fx:id="cbRole" prefHeight="40.0" prefWidth="Infinity" promptText="Bạn là ai?" style="-fx-background-radius: 8;">
+                     <items>
+                        <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="BIDDER" />
+                           <String fx:value="SELLER" />
+                        </FXCollections>
+                     </items>
+                  </ComboBox>
+               </children>
+            </VBox>
+
+            <Button onAction="#handleRegister" prefHeight="45.0" prefWidth="Infinity" 
+                    style="-fx-background-color: #dca742; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="TẠO TÀI KHOẢN" />
+            
+            <Hyperlink onAction="#goToLogin" text="Đã có tài khoản? Đăng nhập ngay" textFill="#666" />
+         </children>
+      </VBox>
+   </children>
+</StackPane>
