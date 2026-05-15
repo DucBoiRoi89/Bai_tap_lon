@@ -1,4 +1,5 @@
 
+import config.AppConfig;
 import core.AuctionSocketClient;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +10,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
  
-        AuctionSocketClient.getInstance().connect("localhost", 1234);
+        AuctionSocketClient.getInstance().connect(AppConfig.SERVER_IP, 1234);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Login.fxml"));
         Scene scene = new Scene(loader.load());
         
@@ -23,10 +24,6 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) { 
-        try {
-            System.setOut(new java.io.PrintStream(System.out, true, "UTF-8"));
-            System.setErr(new java.io.PrintStream(System.err, true, "UTF-8"));
-        } catch (java.io.UnsupportedEncodingException e) {}
         launch(args); 
     }
 }

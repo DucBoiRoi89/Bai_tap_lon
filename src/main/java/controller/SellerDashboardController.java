@@ -105,7 +105,13 @@ public class SellerDashboardController {
             String rawPrice = txtStartingPrice.getText().replaceAll("[,\\.\\s]", "");
             double price = Double.parseDouble(rawPrice);
             
-            LocalDateTime end = dpEndTime.getValue().atTime(23, 59);
+            LocalDateTime end;
+            if (dpEndTime.getValue().equals(java.time.LocalDate.now())) {
+                // MẸO DEMO: Nếu chọn ngày hôm nay, tự động set thời gian kết thúc là 2 phút tính từ bây giờ
+                end = LocalDateTime.now().plusMinutes(2);
+            } else {
+                end = dpEndTime.getValue().atTime(23, 59, 59);
+            }
             String cat = cbCategory.getValue();
 
             Map<String, Object> details = new HashMap<>();
@@ -163,11 +169,17 @@ public class SellerDashboardController {
     private void handleDeleteProduct(ActionEvent event) {
         Item selected = tableItems.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            int sellerId = UserSession.getLoggedInUser().getUserId();
-            if (auctionDAO.deleteItem(Integer.parseInt(selected.getId()), sellerId)) {
-                loadTableData();
-            } else {
-                new Alert(Alert.AlertType.ERROR, "Sản phẩm đang đấu giá, không thể xóa!").show();
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Sản phẩm này cùng toàn bộ lịch sử đấu giá sẽ bị xóa vĩnh viễn. Bạn có chắc chắn không?", ButtonType.YES, ButtonType.NO);
+            confirm.showAndWait();
+            
+            if (confirm.getResult() == ButtonType.YES) {
+                int sellerId = UserSession.getLoggedInUser().getUserId();
+                if (auctionDAO.deleteItem(Integer.parseInt(selected.getId()), sellerId)) {
+                    loadTableData();
+                    new Alert(Alert.AlertType.INFORMATION, "Đã xóa sản phẩm thành công!").show();
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "Không thể xóa!\n\nSản phẩm đang trong phiên đấu giá (RUNNING). Vui lòng đợi phiên đấu giá kết thúc để xóa.").show();
+                }
             }
         }
     }

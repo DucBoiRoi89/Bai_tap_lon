@@ -33,8 +33,6 @@ public class UserDAO {
                 // Chuẩn bị dữ liệu bổ sung cho Factory
                 Map<String, Object> details = new HashMap<>();
                 details.put("balance", balance);
-                details.put("shopName", fullName); // Mặc định dùng tên thật làm tên shop cho Seller
-                
                 // Tạo đối tượng User đúng loại (Admin/Bidder/Seller) thông qua Factory
                 users.add(UserFactory.createUser(role, id, username, password, fullName, details));
             }
@@ -59,9 +57,7 @@ public class UserDAO {
                     double balance = rs.getDouble("balance");
                     
                     Map<String, Object> details = new HashMap<>();
-                    if ("BIDDER".equals(role)) details.put("balance", balance);
-                    else if ("SELLER".equals(role)) details.put("shopName", fullName);
-                
+                    if ("BIDDER".equals(role) || "SELLER".equals(role)) details.put("balance", balance);    
                     return UserFactory.createUser(role, id, username, password, fullName, details);
                 }
             }
@@ -77,8 +73,7 @@ public class UserDAO {
             ps.setString(2, password);
             ps.setString(3, fullName);
             ps.setString(4, role);
-            // Tặng 10tr cho Bidder mới, Seller/Admin mặc định 0đ
-            ps.setDouble(5, "BIDDER".equalsIgnoreCase(role) ? 10000000.0 : 0.0); 
+            ps.setDouble(5, "BIDDER".equalsIgnoreCase(role) ? 50000000.0 : 0.0); 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,18 +90,6 @@ public class UserDAO {
         } catch (SQLException e) { return false; }
     }
 
-    public boolean updateUserFullName(int userId, String newName) {
-        String sql = "UPDATE USERS SET full_name = ? WHERE user_id = ?";
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, newName);
-            ps.setInt(2, userId);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
     public double getUserBalance(int userId) {
         String sql = "SELECT balance FROM USERS WHERE user_id = ?";
         try (Connection conn = config.DatabaseConnection.getInstance().getConnection();

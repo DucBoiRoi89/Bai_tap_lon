@@ -8,8 +8,18 @@ import java.util.*;
 
 public class ItemDAO {
     
+    // Tự động đồng bộ trạng thái: Chuyển RUNNING -> FINISHED nếu đã qua thời gian kết thúc
+    public void syncExpiredAuctions() {
+        String sql = "UPDATE AUCTIONS SET status = 'FINISHED' WHERE status = 'RUNNING' AND end_time <= NOW()";
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.executeUpdate();
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
     // Hàm 1: Dùng cho trang chủ (Chỉ hiển thị sản phẩm đang RUNNING)
     public List<Item> getAllItems() {
+        syncExpiredAuctions(); // Gọi đồng bộ trước khi load dữ liệu
         List<Item> items = new ArrayList<>();
         String sql = "SELECT i.*, auc.auction_id, auc.end_time, auc.starting_price, " +
                  "COALESCE(auc.current_max_price, auc.starting_price) AS current_price, " +
@@ -20,7 +30,8 @@ public class ItemDAO {
                  "LEFT JOIN ELECTRONICS e ON i.item_id = e.item_id " +
                  "LEFT JOIN ART a ON i.item_id = a.item_id " +
                  "LEFT JOIN VEHICLES v ON i.item_id = v.item_id " +
-                 "WHERE auc.status = 'RUNNING'"; // <-- Chỉ lấy hàng đang chạy
+                 "WHERE auc.status IN ('RUNNING', 'FINISHED') " + // Lấy cả hàng đang chạy và đã kết thúc
+                 "ORDER BY CASE WHEN auc.status = 'RUNNING' THEN 1 ELSE 2 END, auc.end_time ASC"; // Ưu tiên hàng đang chạy lên đầu trang
                  
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -38,6 +49,7 @@ public class ItemDAO {
 
     // Hàm 2: DÀNH RIÊNG CHO SELLER (Lấy mọi trạng thái, nhưng chỉ của 1 Seller)
     public List<Item> getSellerItems(int sellerId) {
+        syncExpiredAuctions(); // Gọi đồng bộ trước khi load dữ liệu
         List<Item> items = new ArrayList<>();
         String sql = "SELECT i.*, auc.auction_id, auc.end_time, auc.starting_price, " +
                  "COALESCE(auc.current_max_price, auc.starting_price) AS current_price, " +

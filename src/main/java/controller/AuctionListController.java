@@ -134,7 +134,19 @@ public class AuctionListController {
             Duration duration = Duration.between(now, endTime);
 
             if (duration.isNegative() || duration.isZero()) {
-                lblTime.setText("Thời gian: Đã kết thúc");
+                int winnerId = new dao.AuctionDAO().getHighestBidderId(item.getAuctionId());
+                if (winnerId != -1) {
+                    String winnerName = "User #" + winnerId;
+                    for (model.User u : new dao.UserDAO().getAllUsers()) {
+                        if (u.getUserId() == winnerId) {
+                            winnerName = u.getUsername();
+                            break;
+                        }
+                    }
+                    lblTime.setText("KẾT THÚC - Thắng: " + winnerName);
+                } else {
+                    lblTime.setText("KẾT THÚC - Không có người mua");
+                }
                 lblTime.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
                 btnBid.setText("ĐÃ ĐÓNG");
                 btnBid.setDisable(true); 

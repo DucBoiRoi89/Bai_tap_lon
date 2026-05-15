@@ -2,7 +2,7 @@ package model;
 import java.util.Map;
 
 public class UserFactory {
-    public static User createUser(String role, int id, String username, String password, String email, Map<String, Object> details) {
+    public static User createUser(String role, int id, String username, String password, String fullName, Map<String, Object> details) {
         if (role == null || role.trim().isEmpty()) {
             throw new IllegalArgumentException("Quyền người dùng không được để trống!");
         }
@@ -10,16 +10,14 @@ public class UserFactory {
         switch (role.toUpperCase()) {
             case "BIDDER":
                 double balance = details.containsKey("balance") ? ((Number) details.get("balance")).doubleValue() : 0.0;
-                return new Bidder(id, username, password, email, balance);
+                return new Bidder(id, username, password, fullName, balance);
                 
             case "SELLER":
-                String shopName = details.containsKey("shopName") ? (String) details.get("shopName") : username;
-                double rating = details.containsKey("reputationScore") ? ((Number) details.get("reputationScore")).doubleValue() : 5.0;
-                return new Seller(id, username, password, email, shopName, rating);
+                double sellerBalance = details.containsKey("balance") ? ((Number) details.get("balance")).doubleValue() : 0.0;
+                return new Seller(id, username, password, fullName, sellerBalance);
                 
             case "ADMIN":
-                String accessLevel = details.containsKey("accessLevel") ? (String) details.get("accessLevel") : "MODERATOR";
-                return new Admin(id, username, password, email, accessLevel);
+                return new Admin(id, username, password, fullName);
                 
             default:
                 throw new IllegalArgumentException("Vai trò không hợp lệ: " + role);

@@ -110,24 +110,67 @@ public void updateAuctionStatus(int auctionId, String status) {
 }
 
     public boolean deleteItem(int itemId, int sellerId) {
-        try (Connection conn = DatabaseConnection.getInstance().getConnection()) {
-            // Kiểm tra trạng thái trước
-            String sqlCheck = "SELECT status FROM AUCTIONS WHERE item_id = ?";
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getInstance().getConnection();
+            
+            // 1. Kiểm tra trạng thái, thời gian và lấy auction_id
+            String sqlCheck = "SELECT auction_id, status, end_time FROM AUCTIONS WHERE item_id = ?";
             PreparedStatement psCheck = conn.prepareStatement(sqlCheck);
             psCheck.setInt(1, itemId);
             ResultSet rs = psCheck.executeQuery();
-            if (rs.next() && (rs.getString("status").equals("RUNNING") || rs.getString("status").equals("OPEN"))) {
-                // Nếu muốn cho xóa hàng trong kho (OPEN) thì bỏ chữ OPEN ở trên
-                if(rs.getString("status").equals("RUNNING")) return false; 
+            
+            int auctionId = -1;
+            if (rs.next()) {
+                String status = rs.getString("status");
+                Timestamp endTime = rs.getTimestamp("end_time");
+                boolean isTimeUp = endTime != null && endTime.getTime() <= System.currentTimeMillis();
+                
+                // Chỉ chặn xóa khi phiên đấu giá ĐANG diễn ra thật sự (thời gian chưa kết thúc)
+                if ("RUNNING".equalsIgnoreCase(status) && !isTimeUp) {
+                    return false; // Không cho xóa khi đang chạy
+                }
+                auctionId = rs.getInt("auction_id");
             }
 
-            // Thực hiện xóa theo các bước ( CASCADE ngầm )
+            // 2. Bật Transaction để xóa thủ công theo thứ tự: Con -> Cha
+            conn.setAutoCommit(false);
+            
+            if (auctionId != -1) {
+                // Xóa lịch sử giao dịch và cấu hình bot
+                try (PreparedStatement psBid = conn.prepareStatement("DELETE FROM BID_TRANSACTIONS WHERE auction_id = ?")) {
+                    psBid.setInt(1, auctionId); psBid.executeUpdate();
+                }
+                try (PreparedStatement psAuto = conn.prepareStatement("DELETE FROM AUTO_BID_CONFIGS WHERE auction_id = ?")) {
+                    psAuto.setInt(1, auctionId); psAuto.executeUpdate();
+                }
+                // Xóa phiên đấu giá
+                try (PreparedStatement psAuc = conn.prepareStatement("DELETE FROM AUCTIONS WHERE auction_id = ?")) {
+                    psAuc.setInt(1, auctionId); psAuc.executeUpdate();
+                }
+            }
+            
+            // Xóa thông tin chi tiết các danh mục
+            try (PreparedStatement psE = conn.prepareStatement("DELETE FROM ELECTRONICS WHERE item_id = ?")) { psE.setInt(1, itemId); psE.executeUpdate(); }
+            try (PreparedStatement psA = conn.prepareStatement("DELETE FROM ART WHERE item_id = ?")) { psA.setInt(1, itemId); psA.executeUpdate(); }
+            try (PreparedStatement psV = conn.prepareStatement("DELETE FROM VEHICLES WHERE item_id = ?")) { psV.setInt(1, itemId); psV.executeUpdate(); }
+            
+            // Cuối cùng xóa thông tin sản phẩm chính
             String sqlDel = "DELETE FROM ITEMS WHERE item_id = ? AND seller_id = ?";
-            PreparedStatement psDel = conn.prepareStatement(sqlDel);
-            psDel.setInt(1, itemId);
-            psDel.setInt(2, sellerId);
-            return psDel.executeUpdate() > 0;
-        } catch (SQLException e) { return false; }
+            try (PreparedStatement psDel = conn.prepareStatement(sqlDel)) {
+                psDel.setInt(1, itemId);
+                psDel.setInt(2, sellerId);
+                
+                if (psDel.executeUpdate() > 0) { conn.commit(); return true; } 
+                else { conn.rollback(); return false; }
+            }
+        } catch (SQLException e) {
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) {}
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ex) {}
+        }
     }
     // =========================================================================
     // 2. CHỨC NĂNG ĐẤU GIÁ
@@ -189,20 +232,29 @@ public void updateAuctionStatus(int auctionId, String status) {
         } catch (SQLException e) { e.printStackTrace(); }
         return expired;
     }
-public boolean saveAutoBid(int auctionId, int userId, double maxBid, double increment) {
-    String sql = "INSERT INTO AUTO_BID_CONFIGS (auction_id, user_id, max_bid_amount, bid_increment) VALUES (?, ?, ?, ?)";
-    try (Connection conn = config.DatabaseConnection.getInstance().getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, auctionId);
-        ps.setInt(2, userId);
-        ps.setDouble(3, maxBid);
-        ps.setDouble(4, increment);
-        return ps.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
+    public boolean saveAutoBid(int auctionId, int userId, double maxBid, double increment) {
+        try (Connection conn = config.DatabaseConnection.getInstance().getConnection()) {
+            // FIX: Xóa cấu hình cũ của user trong phiên này để tránh tạo ra nhiều Bot clone tự đè giá nhau
+            String delSql = "DELETE FROM AUTO_BID_CONFIGS WHERE auction_id = ? AND user_id = ?";
+            try (PreparedStatement psDel = conn.prepareStatement(delSql)) {
+                psDel.setInt(1, auctionId);
+                psDel.setInt(2, userId);
+                psDel.executeUpdate();
+            }
+            
+            String sql = "INSERT INTO AUTO_BID_CONFIGS (auction_id, user_id, max_bid_amount, bid_increment, is_active) VALUES (?, ?, ?, ?, 1)";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, auctionId);
+                ps.setInt(2, userId);
+                ps.setDouble(3, maxBid);
+                ps.setDouble(4, increment);
+                return ps.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 
     // =========================================================================
     // 3. CÁC HÀM TRỢ GIÚP CHI TIẾT (ĐÃ ĐỊNH NGHĨA ĐẦY ĐỦ)

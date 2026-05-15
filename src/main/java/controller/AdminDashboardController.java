@@ -31,7 +31,7 @@ public class AdminDashboardController {
         // Cấu hình các cột cho bảng người dùng
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
-        colFullName.setCellValueFactory(new PropertyValueFactory<>("email")); // Trong model User của bạn, email đang được dùng lưu thông tin phụ
+        colFullName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colRole.setCellValueFactory(new PropertyValueFactory<>("role"));
         
         loadStatistics();

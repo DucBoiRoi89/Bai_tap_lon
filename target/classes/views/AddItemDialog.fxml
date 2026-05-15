@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefWidth="550.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30;" 
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SellerDashboardController">
+   <children>
+      <Label fx:id="lblDialogTitle" text="THÔNG TIN SẢN PHẨM" style="-fx-font-weight: bold; -fx-font-size: 22;" />
+      <GridPane hgap="15.0" vgap="15.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="NEVER" minWidth="130.0" />
+          <ColumnConstraints hgrow="ALWAYS" /> </columnConstraints>
+         <children>
+            <Label text="Tên sản phẩm:" />
+            <TextField fx:id="txtItemName" maxWidth="Infinity" GridPane.columnIndex="1" />
+            
+            <Label text="Giá khởi điểm:" GridPane.rowIndex="1" />
+            <TextField fx:id="txtStartingPrice" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            
+            <Label text="Hạn kết thúc:" GridPane.rowIndex="2" />
+            <DatePicker fx:id="dpEndTime" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            
+            <Label text="Loại sản phẩm:" GridPane.rowIndex="3" />
+            <ComboBox fx:id="cbCategory" onAction="#handleCategoryChange" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+
+      <VBox fx:id="dynamicFieldsContainer" spacing="15.0" style="-fx-background-color: #f9f9f9; -fx-padding: 10;" />
+
+      <Label text="Mô tả chi tiết:" />
+      <TextArea fx:id="txtDescription" prefHeight="120.0" wrapText="true" />
+
+      <HBox alignment="CENTER_RIGHT" spacing="15.0">
+         <children>
+            <Button onAction="#handleCancel" text="Hủy bỏ" />
+            <Button fx:id="btnSave" onAction="#handleSaveProduct" text="LƯU THÔNG TIN" style="-fx-background-color: #1a1a1a; -fx-text-fill: #dca742;" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

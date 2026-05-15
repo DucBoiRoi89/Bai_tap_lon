@@ -21,9 +21,19 @@ public class AuctionMonitorService {
                     auctionDAO.updateAuctionStatus(auctionId, "FINISHED");
                     int winnerId = auctionDAO.getHighestBidderId(auctionId);
                     
-                    String message = (winnerId != -1) 
-                        ? "Phiên đấu giá #" + auctionId + " đã kết thúc. Người thắng: User #" + winnerId
-                        : "Phiên đấu giá #" + auctionId + " đã kết thúc mà không có người mua.";
+                    String message;
+                    if (winnerId != -1) {
+                        String winnerName = "User #" + winnerId;
+                        for (model.User u : new dao.UserDAO().getAllUsers()) {
+                            if (u.getUserId() == winnerId) {
+                                winnerName = u.getUsername();
+                                break;
+                            }
+                        }
+                        message = "Phiên đấu giá #" + auctionId + " đã kết thúc. Người thắng: " + winnerName;
+                    } else {
+                        message = "Phiên đấu giá #" + auctionId + " đã kết thúc mà không có người mua.";
+                    }
                         
                     AuctionServer.broadcast(new AuctionEvent(AuctionEvent.Type.AUCTION_FINISHED, auctionId, message));
                     System.out.println("[MONITOR] " + message);

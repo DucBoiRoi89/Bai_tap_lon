@@ -3,8 +3,8 @@ package model;
 public class Bidder extends User {
     private double balance; 
 
-    public Bidder(int userId, String username, String password, String email, double balance) {
-        super(userId, username, password, email, "BIDDER");
+    public Bidder(int userId, String username, String password, String fullName, double balance) {
+        super(userId, username, password, fullName, "BIDDER");
         this.balance = balance;
     }
 

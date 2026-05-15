@@ -40,6 +40,11 @@ public class AutoBidConfig implements Comparable<AutoBidConfig> {
     }
     @Override
     public int compareTo(AutoBidConfig other) {
+        // FIX: Xử lý an toàn trường hợp createdAt bị NULL từ Database để tránh sập Bot
+        if (this.createdAt == null && other.createdAt == null) return 0;
+        if (this.createdAt == null) return 1;
+        if (other.createdAt == null) return -1;
+        
         return this.createdAt.compareTo(other.createdAt);
     }
 }
