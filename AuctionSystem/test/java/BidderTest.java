@@ -1,5 +1,5 @@
-import model.Bidder;
-import model.BidTransaction;
+import Bidder;
+import BidTransaction;
 import model.Electronics;
 import org.junit.jupiter.api.Test;
 

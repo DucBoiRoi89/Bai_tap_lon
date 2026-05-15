@@ -1,5 +1,3 @@
-package model;
-
 import java.time.LocalDateTime;
 
 public class Item1 extends Item {
