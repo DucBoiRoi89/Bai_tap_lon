@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="20.0" style="-fx-background-color: #1a1a1a; -fx-padding: 30; -fx-border-color: #deff9a; -fx-border-width: 2;" 
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="controller.AutoBidController">
+   <children>
+      <Label text="THIẾT LẬP ĐẤU GIÁ TỰ ĐỘNG" textFill="#deff9a">
+         <font><Font name="System Bold" size="20.0" /></font>
+      </Label>
+      
+      <VBox spacing="10.0">
+         <children>
+            <Label text="Giá tối đa bạn có thể trả (VNĐ):" textFill="WHITE" />
+            <TextField fx:id="txtMaxBid" prefHeight="40.0" promptText="Ví dụ: 50000000" 
+                       style="-fx-background-radius: 5;" />
+         </children>
+      </VBox>
+
+      <VBox spacing="10.0">
+         <children>
+            <Label text="Mức giá tự động tăng mỗi lần (VNĐ):" textFill="WHITE" />
+            <TextField fx:id="txtIncrement" prefHeight="40.0" promptText="Ví dụ: 500000" 
+                       style="-fx-background-radius: 5;" />
+         </children>
+      </VBox>
+
+      <HBox spacing="15.0" alignment="CENTER_RIGHT">
+         <children>
+            <Button onAction="#handleCancel" text="HỦY" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" />
+            <Button onAction="#handleActivate" prefHeight="40.0" prefWidth="150.0" 
+                    style="-fx-background-color: #deff9a; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand;" 
+                    text="KÍCH HOẠT BOT" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

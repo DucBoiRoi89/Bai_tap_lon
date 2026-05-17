@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SellerDashboardController">
+   <left>
+      <VBox prefWidth="200.0" spacing="15.0" style="-fx-background-color: #404040;">
+         <padding><Insets bottom="20.0" left="20.0" right="20.0" top="30.0" /></padding>
+         <children>
+            <Button onAction="#handleGoToHome" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Trang chủ" />
+            <Button onAction="#handleGoToProfile" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Tài khoản" />
+            <Label text="KÊNH NGƯỜI BÁN" textFill="#888" />
+            <Button onAction="#handleLoadMyProducts" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: #dca742; -fx-cursor: hand;" text="Sản phẩm của tôi" />
+            <Region VBox.vgrow="ALWAYS" />
+            <Button onAction="#handleStartAuction" prefWidth="200.0" 
+        style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" 
+        text="▶ BẮT ĐẦU ĐẤU GIÁ" />
+            <Button onAction="#handleShowAddDialog" prefWidth="200.0" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="+ THÊM MỚI" />
+            <Button onAction="#handleShowUpdateDialog" prefWidth="200.0" style="-fx-background-color: #ffc107; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand;" text="✎ SỬA SẢN PHẨM" />
+            <Button onAction="#handleDeleteProduct" prefWidth="200.0" style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="✖ XÓA SẢN PHẨM" />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox spacing="20.0" style="-fx-background-color: white;">
+         <padding><Insets bottom="30.0" left="30.0" right="30.0" top="30.0" /></padding>
+         <children>
+            <Label text="SẢN PHẨM CỦA TÔI" style="-fx-font-weight: bold; -fx-font-size: 22;" />
+            <TableView fx:id="tableItems" VBox.vgrow="ALWAYS" stylesheets="@style.css">
+               <columns>
+                  <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+                  <TableColumn fx:id="colName" text="Tên sản phẩm" prefWidth="200" />
+                  <TableColumn fx:id="colPrice" text="Giá hiện tại" prefWidth="120" />
+                  <TableColumn fx:id="colEndTime" text="Hạn kết thúc" prefWidth="150" />
+                  <TableColumn fx:id="colDesc" text="Mô tả" prefWidth="250" />
+               </columns>
+               <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+            </TableView>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
