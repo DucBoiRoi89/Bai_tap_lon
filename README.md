@@ -56,7 +56,7 @@ java -jar target/AuctionSystem-1.0-SNAPSHOT-Client.jar
 -  Luồng kiểm tra an toàn luồng (Polling & Thread-safe): Xử lý tránh ngập lụt Socket khi Bot tự động nhảy số.
 -  Xem chi tiết sản phẩm và lịch sử đấu giá cá nhân.
 -  Quản lý số dư người dùng (trừ tiền hợp lệ khi đấu giá).
-
+-  Cập nhật lịch sử đặt giá của người dùng
 ## 7. Tài liệu liên quan
 Báo cáo PDF: `[Chèn link Google Drive hoặc đường dẫn tới file báo cáo PDF]`
 Video Demo: `[Chèn link YouTube hoặc Google Drive video chạy thử hệ thống]`
